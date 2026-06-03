@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ôn Tập Tin Học THPT 2025–2026 | Cụm 308 – Phú Thọ</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#07090f;--card:#111827;--text:#e8eaf6;--sub:#8892b0;--a1:#00d4ff;--a2:#ff6b35;--a3:#7c3aed;--a4:#10b981;--a5:#f59e0b;--a6:#a78bfa;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);font-family:'Be Vietnam Pro',sans-serif;color:var(--text);min-height:100vh;overflow-x:hidden;}
+  .bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
+  header{text-align:center;padding:52px 20px 32px;position:relative;}
+  .badge{display:inline-block;background:linear-gradient(135deg,var(--a3),var(--a1));color:#fff;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:5px 16px;border-radius:20px;margin-bottom:18px;}
+  h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(38px,8vw,72px);letter-spacing:4px;line-height:1;background:linear-gradient(135deg,#fff 0%,var(--a1) 50%,var(--a3) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .subtitle{color:var(--sub);font-size:13.5px;margin-top:12px;letter-spacing:.5px;line-height:1.6;}
+  .glow-line{width:120px;height:2px;background:linear-gradient(90deg,transparent,var(--a1),transparent);margin:22px auto;}
+  /* Exam info */
+  .exam-info{max-width:900px;margin:0 auto 36px;padding:0 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:11px;}
+  .ei{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:14px 18px;text-align:center;}
+  .ei-val{font-family:'Bebas Neue',sans-serif;font-size:26px;line-height:1.1;}
+  .ei-label{font-size:11px;color:var(--sub);margin-top:4px;line-height:1.5;}
+  /* Topic pills */
+  .topics{max-width:900px;margin:0 auto 36px;padding:0 20px;}
+  .topics-title{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:3px;color:var(--a1);margin-bottom:12px;}
+  .pill-grid{display:flex;flex-wrap:wrap;gap:7px;}
+  .pill{padding:5px 13px;border-radius:20px;font-size:11.5px;font-weight:600;border:1px solid;}
+  .p1{border-color:#ff6b35;color:#ff6b35;background:rgba(255,107,53,.07);}
+  .p2{border-color:#00d4ff;color:#00d4ff;background:rgba(0,212,255,.07);}
+  .p3{border-color:#a78bfa;color:#a78bfa;background:rgba(124,58,237,.07);}
+  .p4{border-color:#10b981;color:#10b981;background:rgba(16,185,129,.07);}
+  .p5{border-color:#fcd34d;color:#fcd34d;background:rgba(245,158,11,.07);}
+  .p6{border-color:#f472b6;color:#f472b6;background:rgba(236,72,153,.07);}
+  /* Grid */
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;max-width:1060px;margin:0 auto;padding:0 20px 70px;}
+  .card{background:var(--card);border-radius:20px;padding:30px 24px;text-decoration:none;color:inherit;border:1px solid rgba(255,255,255,.06);position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s;cursor:pointer;}
+  .card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .3s;border-radius:20px;}
+  .card:hover{transform:translateY(-6px);}
+  .card:hover::before{opacity:1;}
+  .c1::before{background:linear-gradient(135deg,rgba(0,212,255,.08),transparent);}
+  .c2::before{background:linear-gradient(135deg,rgba(255,107,53,.08),transparent);}
+  .c3::before{background:linear-gradient(135deg,rgba(124,58,237,.08),transparent);}
+  .c4::before{background:linear-gradient(135deg,rgba(16,185,129,.08),transparent);}
+  .c5::before{background:linear-gradient(135deg,rgba(245,158,11,.08),transparent);}
+  .c6::before{background:linear-gradient(135deg,rgba(167,139,250,.08),transparent);}
+  .card:hover{box-shadow:0 20px 60px rgba(0,0,0,.4);}
+  .c1:hover{border-color:rgba(0,212,255,.3);}
+  .c2:hover{border-color:rgba(255,107,53,.3);}
+  .c3:hover{border-color:rgba(124,58,237,.3);}
+  .c4:hover{border-color:rgba(16,185,129,.3);}
+  .c5:hover{border-color:rgba(245,158,11,.3);}
+  .c6:hover{border-color:rgba(167,139,250,.3);}
+  .icon-wrap{width:58px;height:58px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:16px;}
+  .ic1{background:rgba(0,212,255,.12);}
+  .ic2{background:rgba(255,107,53,.12);}
+  .ic3{background:rgba(124,58,237,.12);}
+  .ic4{background:rgba(16,185,129,.12);}
+  .ic5{background:rgba(245,158,11,.12);}
+  .ic6{background:rgba(167,139,250,.12);}
+  .card-num{font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:2px;margin-bottom:5px;}
+  .n1{color:var(--a1);}
+  .n2{color:#ff6b35;}
+  .n3{color:#a78bfa;}
+  .n4{color:#10b981;}
+  .n5{color:#fcd34d;}
+  .n6{color:#c4b5fd;}
+  .card h2{font-size:19px;font-weight:800;margin-bottom:7px;line-height:1.3;}
+  .card p{font-size:12.5px;color:var(--sub);line-height:1.7;}
+  .tag-list{display:flex;flex-wrap:wrap;gap:5px;margin-top:14px;}
+  .tag{font-size:10.5px;padding:2px 9px;border-radius:20px;font-weight:600;}
+  .t1{background:rgba(0,212,255,.1);color:var(--a1);}
+  .t2{background:rgba(255,107,53,.1);color:#ff6b35;}
+  .t3{background:rgba(124,58,237,.1);color:#a78bfa;}
+  .t4{background:rgba(16,185,129,.1);color:#10b981;}
+  .t5{background:rgba(245,158,11,.1);color:#fcd34d;}
+  .t6{background:rgba(167,139,250,.1);color:#c4b5fd;}
+  .arrow{position:absolute;right:20px;bottom:20px;font-size:17px;opacity:.2;transition:all .3s;}
+  .card:hover .arrow{opacity:1;transform:translate(3px,-3px);}
+  .new-badge{position:absolute;top:16px;right:16px;background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;font-size:9px;font-weight:800;padding:2px 8px;border-radius:10px;letter-spacing:1px;}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+  .float{animation:float 4s ease-in-out infinite;}
+  footer{text-align:center;color:var(--sub);font-size:11px;padding-bottom:32px;letter-spacing:.5px;}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<header>
+  <div class="badge">📚 GDPT 2018 · Tin Học Ứng Dụng (ICT) · Cụm 308 – Phú Thọ · 2025–2026</div>
+  <h1>ÔN TẬP TIN HỌC THPT</h1>
+  <div class="subtitle">Bộ công cụ ôn tập toàn diện · Bám sát ma trận đề thi Cụm 308<br>Sinh động · Dễ nhớ · Có AI hỗ trợ · Mô phỏng đề thi thật</div>
+  <div class="glow-line"></div>
+</header>
+
+<div class="exam-info">
+  <div class="ei"><div class="ei-val" style="color:#ff6b35">24</div><div class="ei-label">câu Phần I<br>TN chọn đáp án (6đ)</div></div>
+  <div class="ei"><div class="ei-val" style="color:#00d4ff">4</div><div class="ei-label">câu Phần II<br>TN đúng/sai (4đ)</div></div>
+  <div class="ei"><div class="ei-val" style="color:#10b981">40%</div><div class="ei-label">Nhận biết<br>16 lệnh hỏi</div></div>
+  <div class="ei"><div class="ei-val" style="color:#fcd34d">30%</div><div class="ei-label">Thông hiểu<br>12 lệnh hỏi</div></div>
+  <div class="ei"><div class="ei-val" style="color:#f87171">30%</div><div class="ei-label">Vận dụng<br>12 lệnh hỏi</div></div>
+  <div class="ei"><div class="ei-val" style="color:#a78bfa">50'</div><div class="ei-label">Thời gian<br>làm bài</div></div>
+</div>
+
+<div class="topics">
+  <div class="topics-title">Chủ đề trong đề thi</div>
+  <div class="pill-grid">
+    <span class="pill p1">🤖 12A · Trí tuệ nhân tạo (Câu 1–4)</span>
+    <span class="pill p2">🌐 12B · Mạng máy tính (Câu 5–9 + P.II Câu 1)</span>
+    <span class="pill p3">🌐 12F · Tạo trang Web HTML/CSS (Câu 10–13 + P.II ICT Câu 5)</span>
+    <span class="pill p4">💻 10F · Lập trình Python (Câu 14–18)</span>
+    <span class="pill p5">⚖️ 12D · Đạo đức môi trường số (Câu 19–22)</span>
+    <span class="pill p6">🎯 12G · Hướng nghiệp CNTT (Câu 23–24)</span>
+    <span class="pill p2">🗄️ 11F · Cơ sở dữ liệu SQL (P.II Câu 2 + P.II ICT Câu 6)</span>
+  </div>
+</div>
+
+<div class="grid">
+  <!-- 1. Mindmap -->
+  <a class="card c1" href="mindmap.html">
+    <div class="icon-wrap ic1 float">🗺️</div>
+    <div class="card-num n1">01 / MINDMAP</div>
+    <h2>Sơ Đồ Tư Duy Tương Tác</h2>
+    <p>Toàn bộ 7 chủ đề trong ma trận đề thi Cụm 308 được trực quan hóa, kéo và zoom để khám phá.</p>
+    <div class="tag-list">
+      <span class="tag t1">7 chủ đề</span>
+      <span class="tag t1">Zoom & Pan</span>
+      <span class="tag t1">Hover xem chi tiết</span>
+    </div>
+    <span class="arrow">↗</span>
+  </a>
+
+  <!-- 2. Flashcard -->
+  <a class="card c2" href="flashcard.html">
+    <div class="icon-wrap ic2 float" style="animation-delay:.4s">🃏</div>
+    <div class="card-num n2">02 / FLASHCARD</div>
+    <h2>Flashcard Ôn Tập AI</h2>
+    <p>35+ thẻ ghi nhớ bám sát từng chủ đề trong ma trận, lật thẻ, phân loại mức độ, có AI giải thích sâu.</p>
+    <div class="tag-list">
+      <span class="tag t2">35+ thẻ</span>
+      <span class="tag t2">Phân mức độ</span>
+      <span class="tag t2">AI Claude</span>
+    </div>
+    <span class="arrow">↗</span>
+  </a>
+
+  <!-- 3. Infographic -->
+  <a class="card c3" href="infographic.html">
+    <div class="icon-wrap ic3 float" style="animation-delay:.8s">📊</div>
+    <div class="card-num n3">03 / INFOGRAPHIC</div>
+    <h2>Infographic Trọng Tâm</h2>
+    <p>Tóm tắt trực quan 7 chủ đề theo đúng ma trận đề thi, kèm bảng tra cứu nhanh HTML, SQL, Python.</p>
+    <div class="tag-list">
+      <span class="tag t3">7 chủ đề</span>
+      <span class="tag t3">Bảng tra cứu</span>
+      <span class="tag t3">Đẹp, in được</span>
+    </div>
+    <span class="arrow">↗</span>
+  </a>
+
+  <!-- 4. Trắc nghiệm -->
+  <a class="card c4" href="tracnghiem.html">
+    <div class="icon-wrap ic4 float" style="animation-delay:1.2s">❓</div>
+    <div class="card-num n4">04 / TRẮC NGHIỆM</div>
+    <h2>Luyện Đề Có Giải Thích</h2>
+    <p>Ngân hàng câu hỏi Phần I và Phần II đúng/sai, bám sát cấu trúc đề thi 2025, AI giải thích từng câu.</p>
+    <div class="tag-list">
+      <span class="tag t4">Phần I + II</span>
+      <span class="tag t4">Đúng/Sai</span>
+      <span class="tag t4">Giải thích đáp án</span>
+    </div>
+    <span class="arrow">↗</span>
+  </a>
+
+  <!-- 5. Đề thi mô phỏng -->
+  <a class="card c5" href="de-thi-mau.html">
+    <div class="new-badge">MỚI</div>
+    <div class="icon-wrap ic5 float" style="animation-delay:1.6s">📝</div>
+    <div class="card-num n5">05 / ĐỀ THI MÔ PHỎNG</div>
+    <h2>Đề Thi Mô Phỏng Thật</h2>
+    <p>40 câu hỏi theo đúng cấu trúc đề thi thật 2025, đồng hồ đếm ngược 50 phút, chấm điểm tự động.</p>
+    <div class="tag-list">
+      <span class="tag t5">40 câu</span>
+      <span class="tag t5">Đồng hồ 50'</span>
+      <span class="tag t5">Chấm điểm/10</span>
+    </div>
+    <span class="arrow">↗</span>
+  </a>
+
+  <!-- 6. Ôn nhanh -->
+  <a class="card c6" href="on-nhanh.html">
+    <div class="new-badge">MỚI</div>
+    <div class="icon-wrap ic6 float" style="animation-delay:2s">📖</div>
+    <div class="card-num n6">06 / ÔN NHANH</div>
+    <h2>Tra Cứu Kiến Thức</h2>
+    <p>Tổng hợp lý thuyết, cú pháp HTML/CSS/SQL/Python theo từng chủ đề. Có thanh tìm kiếm và code mẫu.</p>
+    <div class="tag-list">
+      <span class="tag t6">Code mẫu</span>
+      <span class="tag t6">Bảng tra cứu</span>
+      <span class="tag t6">Tìm kiếm nhanh</span>
+    </div>
+    <span class="arrow">↗</span>
+  </a>
+</div>
+
+<footer>Cụm 308 · Phú Thọ · GDPT 2018 · Định hướng Tin học ứng dụng (ICT) · 2025–2026</footer>
+</body>
+</html>

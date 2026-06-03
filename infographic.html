@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infographic – Tin Học THPT Cụm 308</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#07090f;--card:#0f172a;--text:#e8eaf6;--sub:#8892b0;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);font-family:'Be Vietnam Pro',sans-serif;color:var(--text);}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 22px;border-bottom:1px solid rgba(255,255,255,0.06);position:sticky;top:0;background:var(--bg);z-index:10;}
+  .back{color:var(--sub);text-decoration:none;font-size:13px;}.back:hover{color:var(--text);}
+  .title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;background:linear-gradient(90deg,#00d4ff,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  /* hero */
+  .hero{text-align:center;padding:44px 20px 28px;}
+  .hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,6vw,60px);letter-spacing:4px;background:linear-gradient(135deg,#fff,#00d4ff,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .hero p{color:var(--sub);margin-top:8px;font-size:13px;letter-spacing:0.5px;}
+  /* exam structure */
+  .exam-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;max-width:1060px;margin:0 auto 32px;padding:0 20px;}
+  .eq{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:14px 16px;text-align:center;}
+  .eq-num{font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1;}
+  .eq-label{font-size:11px;color:var(--sub);margin-top:4px;line-height:1.5;}
+  /* sections */
+  .wrap{max-width:1060px;margin:0 auto;padding:0 20px 60px;}
+  .sec{margin-bottom:28px;border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);}
+  .sec-head{display:flex;align-items:center;gap:14px;padding:18px 24px;position:relative;}
+  .sec-head::after{content:'';position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:700;letter-spacing:1px;opacity:0.5;}
+  .sec-icon{font-size:28px;}
+  .sec-info{flex:1;}
+  .sec-num{font-size:10px;letter-spacing:2px;text-transform:uppercase;opacity:0.5;margin-bottom:3px;}
+  .sec-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(18px,3.5vw,24px);letter-spacing:2px;}
+  .sec-meta{font-size:11.5px;color:var(--sub);margin-top:2px;}
+  .sec-body{padding:0 24px 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:12px;}
+  .tc{background:rgba(255,255,255,0.035);border-radius:11px;padding:14px 15px;border:1px solid rgba(255,255,255,0.05);transition:border-color 0.2s,transform 0.2s;}
+  .tc:hover{transform:translateY(-2px);}
+  .tc-icon{font-size:19px;margin-bottom:7px;}
+  .tc-title{font-size:12.5px;font-weight:700;margin-bottom:7px;}
+  .tc ul{list-style:none;}
+  .tc li{font-size:11.5px;color:var(--sub);line-height:1.8;display:flex;gap:5px;}
+  .tc li::before{content:'▸';font-size:9px;flex-shrink:0;margin-top:2px;}
+  /* Color theming */
+  .s1 .sec-head{background:linear-gradient(135deg,rgba(255,107,53,.14),rgba(255,107,53,.03));}
+  .s1 .sec-title{color:#ff6b35;} .s1 .tc:hover{border-color:rgba(255,107,53,.3);} .s1 .tc li::before{color:#ff6b35;}
+  .s2 .sec-head{background:linear-gradient(135deg,rgba(0,212,255,.14),rgba(0,212,255,.03));}
+  .s2 .sec-title{color:#00d4ff;} .s2 .tc:hover{border-color:rgba(0,212,255,.3);} .s2 .tc li::before{color:#00d4ff;}
+  .s3 .sec-head{background:linear-gradient(135deg,rgba(124,58,237,.14),rgba(124,58,237,.03));}
+  .s3 .sec-title{color:#a78bfa;} .s3 .tc:hover{border-color:rgba(124,58,237,.3);} .s3 .tc li::before{color:#a78bfa;}
+  .s4 .sec-head{background:linear-gradient(135deg,rgba(16,185,129,.14),rgba(16,185,129,.03));}
+  .s4 .sec-title{color:#10b981;} .s4 .tc:hover{border-color:rgba(16,185,129,.3);} .s4 .tc li::before{color:#10b981;}
+  .s5 .sec-head{background:linear-gradient(135deg,rgba(245,158,11,.14),rgba(245,158,11,.03));}
+  .s5 .sec-title{color:#fcd34d;} .s5 .tc:hover{border-color:rgba(245,158,11,.3);} .s5 .tc li::before{color:#fcd34d;}
+  .s6 .sec-head{background:linear-gradient(135deg,rgba(236,72,153,.14),rgba(236,72,153,.03));}
+  .s6 .sec-title{color:#f472b6;} .s6 .tc:hover{border-color:rgba(236,72,153,.3);} .s6 .tc li::before{color:#f472b6;}
+  .s7 .sec-head{background:linear-gradient(135deg,rgba(6,182,212,.14),rgba(6,182,212,.03));}
+  .s7 .sec-title{color:#67e8f9;} .s7 .tc:hover{border-color:rgba(6,182,212,.3);} .s7 .tc li::before{color:#67e8f9;}
+  /* quick ref boxes */
+  .ref-wrap{margin-bottom:32px;}
+  .ref-wrap h2{font-family:'Bebas Neue',sans-serif;letter-spacing:3px;font-size:20px;margin-bottom:14px;color:#00d4ff;}
+  .ref-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:11px;}
+  .ri{background:#0f172a;border:1px solid rgba(0,212,255,.13);border-radius:11px;padding:13px 15px;}
+  .ri .fn{font-size:12.5px;font-weight:700;color:#00d4ff;margin-bottom:3px;}
+  .ri .syn{font-family:monospace;font-size:11.5px;color:#93c5fd;background:rgba(0,0,0,.45);padding:4px 8px;border-radius:6px;margin:5px 0;word-break:break-all;line-height:1.5;}
+  .ri .desc{font-size:11px;color:var(--sub);line-height:1.6;}
+  /* level badge */
+  .lbadge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:.5px;}
+  .lb{background:rgba(16,185,129,.15);color:#10b981;}
+  .lh{background:rgba(245,158,11,.15);color:#fcd34d;}
+  .lv{background:rgba(239,68,68,.15);color:#f87171;}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="index.html" class="back">← Trang chủ</a>
+  <div class="title">INFOGRAPHIC TRỌNG TÂM · CỤM 308</div>
+  <span></span>
+</div>
+
+<div class="hero">
+  <h1>7 CHỦ ĐỀ TRỌNG TÂM ĐỀ THI</h1>
+  <p>Tin học ứng dụng (ICT) · GDPT 2018 · Cụm 308 – Phú Thọ · Ôn thi THPT 2025–2026</p>
+</div>
+
+<!-- Exam structure -->
+<div class="exam-grid">
+  <div class="eq"><div class="eq-num" style="color:#ff6b35">24</div><div class="eq-label">câu Phần I<br>TN chọn đáp án<br>(6 điểm)</div></div>
+  <div class="eq"><div class="eq-num" style="color:#00d4ff">4</div><div class="eq-label">câu Phần II<br>TN đúng/sai<br>(4 điểm)</div></div>
+  <div class="eq"><div class="eq-num" style="color:#10b981">40%</div><div class="eq-label">Mức Biết<br>16/40 lệnh hỏi</div></div>
+  <div class="eq"><div class="eq-num" style="color:#fcd34d">30%</div><div class="eq-label">Mức Hiểu<br>12/40 lệnh hỏi</div></div>
+  <div class="eq"><div class="eq-num" style="color:#f87171">30%</div><div class="eq-label">Mức Vận dụng<br>12/40 lệnh hỏi</div></div>
+  <div class="eq"><div class="eq-num" style="color:#a78bfa">50'</div><div class="eq-label">Thời gian làm bài<br>(không kể phát đề)</div></div>
+</div>
+
+<div class="wrap">
+
+<!-- 12A -->
+<div class="sec s1">
+  <div class="sec-head">
+    <div class="sec-icon">🤖</div>
+    <div class="sec-info">
+      <div class="sec-num">CHỦ ĐỀ 01 · Câu 1–4 (Phần I)</div>
+      <div class="sec-title">12A · TRÍ TUỆ NHÂN TẠO</div>
+      <div class="sec-meta">Câu 1: <span class="lbadge lb">Biết</span> &nbsp; Câu 2,3: <span class="lbadge lh">Hiểu</span> &nbsp; Câu 4: <span class="lbadge lv">Vận dụng</span></div>
+    </div>
+  </div>
+  <div class="sec-body">
+    <div class="tc"><div class="tc-icon">🧠</div><div class="tc-title">Khái niệm AI</div><ul>
+      <li>AI = Artificial Intelligence = Trí tuệ nhân tạo</li>
+      <li>Khả năng máy tính làm việc "thông minh" như người</li>
+      <li>Hội thảo Dartmouth 1956 – điểm khởi đầu của AI</li>
+      <li>AI hẹp (ANI): làm 1 việc cụ thể (hiện tại)</li>
+      <li>AI rộng (AGI): làm nhiều việc như người (tương lai)</li>
+    </ul></div>
+    <div class="tc"><div class="tc-icon">📱</div><div class="tc-title">Ứng dụng AI</div><ul>
+      <li>Google Dịch – dịch thuật đa ngôn ngữ</li>
+      <li>Nhận dạng khuôn mặt (Face ID, camera an ninh)</li>
+      <li>Xe tự lái (Tesla Autopilot)</li>
+      <li>Trợ lý ảo: Siri, Alexa, ChatGPT</li>
+      <li>AI trong y tế: chẩn đoán ung thư, X-quang</li>
+      <li>AI trong tài chính: phát hiện gian lận</li>
+    </ul></div>
+    <div class="tc"><div class="tc-icon">⚠️</div><div class="tc-title">Cảnh báo về AI</div><ul>
+      <li>Mất việc làm do tự động hóa</li>
+      <li>Deepfake – video/ảnh giả mạo</li>
+      <li>Xâm phạm quyền riêng tư dữ liệu</li>
+      <li>AI bị lạm dụng sai mục đích</li>
+      <li>Thiếu quy định pháp lý rõ ràng</li>
+    </ul></div>
+  </div>
+</div>
+
+<!-- 12B -->
+<div class="sec s2">
+  <div class="sec-head">
+    <div class="sec-icon">🌐</div>
+    <div class="sec-info">
+      <div class="sec-num">CHỦ ĐỀ 02 · Câu 5–9 (Phần I) + Câu 1 (Phần II Chung)</div>
+      <div class="sec-title">12B · MẠNG MÁY TÍNH & INTERNET</div>
+      <div class="sec-meta">P.I: 2<span class="lbadge lb">Biết</span> 1<span class="lbadge lh">Hiểu</span> 1<span class="lbadge lv">VD</span> &nbsp;|&nbsp; P.II: a<span class="lbadge lb">B</span> b<span class="lbadge lh">H</span> c,d<span class="lbadge lv">VD</span></div>
+    </div>
+  </div>
+  <div class="sec-body">
+    <div class="tc"><div class="tc-icon">🔌</div><div class="tc-title">Thiết bị mạng</div><ul>
+      <li><b>Hub</b>: phân phối tín hiệu TẤT CẢ cổng (cũ)</li>
+      <li><b>Switch</b>: gửi đúng cổng đích theo MAC</li>
+      <li><b>Router</b>: kết nối mạng khác nhau, định tuyến IP</li>
+      <li><b>Modem</b>: chuyển đổi tín hiệu analog ↔ số</li>
+      <li><b>Access Point</b>: phát sóng WiFi</li>
+    </ul></div>
+    <div class="tc"><div class="tc-icon">📡</div><div class="tc-title">Giao thức TCP/IP</div><ul>
+      <li>IP: địa chỉ và định tuyến gói tin</li>
+      <li>TCP: truyền dữ liệu tin cậy, kiểm lỗi</li>
+      <li>HTTP/HTTPS: truy cập web (HTTPS có mã hóa)</li>
+      <li>DNS: tên miền → địa chỉ IP</li>
+      <li>IPv4: 32 bit | IPv6: 128 bit</li>
+    </ul></div>
+    <div class="tc"><div class="tc-icon">🖧</div><div class="tc-title">Chia sẻ tài nguyên</div><ul>
+      <li>Chia sẻ thư mục qua Properties → Sharing</li>
+      <li>Phân quyền: Read / Read-Write</li>
+      <li>Truy cập: \\địa_chỉ_IP\tên_chia_sẻ</li>
+      <li>Workgroup: mạng ngang hàng nhỏ</li>
+      <li>Domain: mạng có máy chủ quản lý</li>
+    </ul></div>
+    <div class="tc"><div class="tc-icon">🔢</div><div class="tc-title">Địa chỉ IP & DNS</div><ul>
+      <li>IPv4: dạng a.b.c.d (VD: 192.168.1.1)</li>
+      <li>IP tĩnh: cấu hình thủ công, không đổi</li>
+      <li>IP động: cấp bởi DHCP server</li>
+      <li>DNS = "danh bạ điện thoại" của Internet</li>
+      <li>google.com → 142.250.190.14</li>
+    </ul></div>
+  </div>
+</div>
+
+<!-- 12F -->
+<div class="sec s3">
+  <div class="sec-head">
+    <div class="sec-icon">🌐</div>
+    <div class="sec-info">
+      <div class="sec-num">CHỦ ĐỀ 03 · Câu 10–13 (Phần I) + Câu 5 (Phần II ICT)</div>
+      <div class="sec-title">12F · TẠO TRANG WEB (HTML & CSS)</div>
+      <div class="sec-meta">P.I: 2<span class="lbadge lb">Biết</span> 1<span class="lbadge lh">Hiểu</span> 1<span class="lbadge lv">VD</span> &nbsp;|&nbsp; P.II ICT: a,b<span class="lbadge lb">B</span> c<span class="lbadge lh">H</span> d<span class="lbadge lv">VD</span></div>
+    </div>
+  </div>
+  <div class="sec-body">
+    <div class="tc"><div class="tc-icon">🏗️</div><div class="tc-title">Cấu trúc HTML</div><ul>
+      <li>&lt;!DOCTYPE html&gt; – khai báo loại tài liệu</li>
+      <li>&lt;html&gt; – thẻ gốc bọc toàn bộ</li>
+      <li>&lt;head&gt; – thông tin meta, title, CSS</li>
+      <li>&lt;body&gt; – nội dung hiển thị</li>
+      <li>&lt;title&gt; – tiêu đề hiển thị trên tab</li>
+    </ul></div>
+    <div class="tc"><div class="tc-icon">📝</div><div class="tc-title">Thẻ HTML cơ bản</div><ul>
+      <li>&lt;h1&gt;–&lt;h6&gt;: tiêu đề (h1 lớn nhất)</li>
+      <li>&lt;p&gt;: đoạn văn | &lt;br&gt;: xuống dòng</li>
+      <li>&lt;b&gt;/&lt;strong&gt;: in đậm</li>
+      <li>&lt;a href=""&gt;: liên kết</li>
+      <li>&lt;img src="" alt=""&gt;: hình ảnh</li>
+      <li>&lt;ul&gt;&lt;ol&gt;&lt;li&gt;: danh sách</li>
+    </ul></div>
+    <div class="tc"><div class="tc-icon">📊</div><div class="tc-title">Bảng HTML</div><ul>
+      <li>&lt;table&gt;: tạo bảng</li>
+      <li>&lt;tr&gt;: hàng (table row)</li>
+      <li>&lt;th&gt;: ô tiêu đề (đậm, giữa)</li>
+      <li>&lt;td&gt;: ô dữ liệu</li>
+      <li>colspan="2": gộp 2 cột ngang</li>
+      <li>rowspan="2": gộp 2 hàng dọc</li>
+    </ul></div>
+    <div class="tc"><div class="tc-icon">🎨</div><div class="tc-title">CSS Định dạng</div><ul>
+      <li>Selector tag: p { color: red; }</li>
+      <li>Selector class: .ten { font-size: 16px; }</li>
+      <li>Selector ID: #id { width: 100%; }</li>
+      <li>margin: ngoài viền | padding: trong viền</li>
+      <li>border: 1px solid #ccc;</li>
+      <li>Inline &gt; Internal &gt; External (ưu tiên)</li>
+    </ul></div>
+  </div>
+</div>
+
+<!-- 10F -->
+<div class="sec s4">
+  <div class="sec-head">
+    <div class="sec-icon">💻</div>
+    <div class="sec-info">
+      <div class="sec-num">CHỦ ĐỀ 04 · Câu 14–18 (Phần I)</div>
+      <div class="sec-title">10F · LẬP TRÌNH CƠ BẢN (PYTHON)</div>
+      <div class="sec-meta">Câu 14,15: <span class="lbadge lb">Biết</span> &nbsp; Câu 16,17: <span class="lbadge lh">Hiểu</span> &nbsp; Câu 18: <span class="lbadge lv">Vận dụng</span></div>
+    </div>
+  </div>
+  <div class="sec-body">
+    <div class="tc"><div class="tc-icon">📦</div><div class="tc-title">Biến & Kiểu dữ liệu</div><ul>
+      <li>int: số nguyên (1, -5, 100)</li>
+      <li>float: số thực (3.14, -2.5)</li>
+      <li>str: chuỗi ("xin chào")</li>
+      <li>bool: True / False</li>
+      <li>list: danh sách [1, 2, 3]</li>
+      <li>print(), input() – nhập xuất</li>
+    </ul></div>
+    <div class="tc"><div class="tc-icon">🔀</div><div class="tc-title">Lệnh rẽ nhánh</div><ul>
+      <li>if điều_kiện: → lệnh</li>
+      <li>elif điều_kiện_2: → lệnh</li>
+      <li>else: → lệnh mặc định</li>
+      <li>So sánh: ==, !=, >, <, >=, <=</li>
+      <li>Logic: and, or, not</li>
+      <li>Lưu ý: Python dùng thụt lề (indent)</li>
+    </ul></div>
+    <div class="tc"><div class="tc-icon">🔁</div><div class="tc-title">Vòng lặp</div><ul>
+      <li>for i in range(n): – từ 0 đến n-1</li>
+      <li>for i in range(1, n+1): – từ 1 đến n</li>
+      <li>while điều_kiện: – lặp chưa biết số lần</li>
+      <li>break: thoát vòng lặp</li>
+      <li>continue: bỏ qua lần lặp hiện tại</li>
+    </ul></div>
+    <div class="tc"><div class="tc-icon">🔧</div><div class="tc-title">Hàm (Function)</div><ul>
+      <li>def ten_ham(tham_so):</li>
+      <li>    return ket_qua</li>
+      <li>Gọi: bien = ten_ham(gia_tri)</li>
+      <li>Hàm có thể không có return</li>
+      <li>Biến cục bộ vs biến toàn cục</li>
+      <li>Đọc code: xác định input → output</li>
+    </ul></div>
+  </div>
+</div>
+
+<!-- 12D -->
+<div class="sec s5">
+  <div class="sec-head">
+    <div class="sec-icon">⚖️</div>
+    <div class="sec-info">
+      <div class="sec-num">CHỦ ĐỀ 05 · Câu 19–22 (Phần I)</div>
+      <div class="sec-title">12D · ĐẠO ĐỨC, PHÁP LUẬT & VĂN HÓA MÔI TRƯỜNG SỐ</div>
+      <div class="sec-meta">Câu 19,20: <span class="lbadge lb">Biết</span> &nbsp; Câu 21: <span class="lbadge lh">Hiểu</span> &nbsp; Câu 22: <span class="lbadge lv">Vận dụng</span></div>
+    </div>
+  </div>
+  <div class="sec-body">
+    <div class="tc"><div class="tc-icon">💬</div><div class="tc-title">Giao tiếp trên mạng</div><ul>
+      <li>Không đăng tin giả, thông tin sai sự thật</li>
+      <li>Tôn trọng, không miệt thị người khác</li>
+      <li>Không bắt nạt trực tuyến (cyberbullying)</li>
+      <li>Bảo vệ thông tin cá nhân</li>
+      <li>Chịu trách nhiệm nội dung mình đăng</li>
+    </ul></div>
+    <div class="tc"><div class="tc-icon">⚖️</div><div class="tc-title">Pháp luật CNTT</div><ul>
+      <li>Luật An ninh mạng 2018</li>
+      <li>Luật Công nghệ thông tin 2006</li>
+      <li>Luật Sở hữu trí tuệ (bản quyền phần mềm)</li>
+      <li>Nghiêm cấm: tán phát tin giả, tấn công mạng</li>
+      <li>Nghiêm cấm: lừa đảo qua mạng, tống tiền</li>
+    </ul></div>
+    <div class="tc"><div class="tc-icon">©️</div><div class="tc-title">Bản quyền số</div><ul>
+      <li>Bản quyền PM: phải có giấy phép hợp lệ</li>
+      <li>Freeware: miễn phí, không sửa code</li>
+      <li>Open Source: dùng/sửa/chia sẻ tự do</li>
+      <li>Deepfake – công nghệ giả mạo nguy hiểm</li>
+      <li>Creative Commons (CC) – chia sẻ có điều kiện</li>
+    </ul></div>
+  </div>
+</div>
+
+<!-- 12G -->
+<div class="sec s6">
+  <div class="sec-head">
+    <div class="sec-icon">🎯</div>
+    <div class="sec-info">
+      <div class="sec-num">CHỦ ĐỀ 06 · Câu 23–24 (Phần I)</div>
+      <div class="sec-title">12G · HƯỚNG NGHIỆP VỚI TIN HỌC</div>
+      <div class="sec-meta">Câu 23: <span class="lbadge lb">Biết</span> &nbsp; Câu 24: <span class="lbadge lh">Hiểu</span></div>
+    </div>
+  </div>
+  <div class="sec-body">
+    <div class="tc"><div class="tc-icon">👨‍💻</div><div class="tc-title">Nhóm nghề phát triển</div><ul>
+      <li>Lập trình viên (Front/Back-end Dev)</li>
+      <li>Kỹ sư phần mềm (Software Engineer)</li>
+      <li>Nhà khoa học dữ liệu (Data Scientist)</li>
+      <li>Kỹ sư AI / Machine Learning</li>
+      <li>Thiết kế UI/UX</li>
+    </ul></div>
+    <div class="tc"><div class="tc-icon">🛠️</div><div class="tc-title">Nhóm dịch vụ & quản trị</div><ul>
+      <li>Quản trị hệ thống (SysAdmin)</li>
+      <li>Quản trị mạng (Network Admin)</li>
+      <li>An ninh mạng (Cyber Security)</li>
+      <li>Quản trị CSDL (DBA)</li>
+      <li>Hỗ trợ kỹ thuật (IT Helpdesk)</li>
+      <li>Cloud / DevOps Engineer</li>
+    </ul></div>
+  </div>
+</div>
+
+<!-- 11F CSDL -->
+<div class="sec s7">
+  <div class="sec-head">
+    <div class="sec-icon">🗄️</div>
+    <div class="sec-info">
+      <div class="sec-num">CHỦ ĐỀ 07 · Câu 2 (Phần II Chung) + Câu 6 (Phần II ICT)</div>
+      <div class="sec-title">11F · CƠ SỞ DỮ LIỆU & SQL</div>
+      <div class="sec-meta">P.II Chung: a<span class="lbadge lb">B</span> b<span class="lbadge lh">H</span> c,d<span class="lbadge lv">VD</span> &nbsp;|&nbsp; P.II ICT: a,b<span class="lbadge lb">B</span> c<span class="lbadge lh">H</span> d<span class="lbadge lv">VD</span></div>
+    </div>
+  </div>
+  <div class="sec-body">
+    <div class="tc"><div class="tc-icon">📋</div><div class="tc-title">Khái niệm CSDL</div><ul>
+      <li>Database: tập dữ liệu có cấu trúc</li>
+      <li>Table (Bảng): tập hợp dữ liệu cùng loại</li>
+      <li>Record (Bản ghi): một hàng trong bảng</li>
+      <li>Field (Trường): một cột trong bảng</li>
+      <li>Primary Key: khóa chính, định danh duy nhất</li>
+      <li>RDBMS: MySQL, Access, SQL Server</li>
+    </ul></div>
+    <div class="tc"><div class="tc-icon">🔍</div><div class="tc-title">SQL – SELECT</div><ul>
+      <li>SELECT * FROM Bảng;</li>
+      <li>SELECT cột1, cột2 FROM Bảng;</li>
+      <li>WHERE điều_kiện (=, >, <, LIKE)</li>
+      <li>ORDER BY cột ASC / DESC</li>
+      <li>LIKE "Nguyễn%" – tìm bắt đầu bằng</li>
+      <li>AND, OR, NOT – kết hợp điều kiện</li>
+    </ul></div>
+    <div class="tc"><div class="tc-icon">📊</div><div class="tc-title">SQL – Hàm tổng hợp</div><ul>
+      <li>COUNT(*): đếm số bản ghi</li>
+      <li>SUM(cột): tính tổng giá trị</li>
+      <li>AVG(cột): tính trung bình</li>
+      <li>MAX(cột): giá trị lớn nhất</li>
+      <li>MIN(cột): giá trị nhỏ nhất</li>
+      <li>GROUP BY: nhóm dữ liệu</li>
+    </ul></div>
+  </div>
+</div>
+
+<!-- Quick ref: HTML tags -->
+<div class="ref-wrap">
+  <h2>⚡ BẢNG TRA CỨU NHANH – THẺ HTML TRỌNG TÂM</h2>
+  <div class="ref-grid">
+    <div class="ri"><div class="fn">Liên kết</div><div class="syn">&lt;a href="url" target="_blank"&gt;Text&lt;/a&gt;</div><div class="desc">target="_blank" mở tab mới</div></div>
+    <div class="ri"><div class="fn">Hình ảnh</div><div class="syn">&lt;img src="anh.jpg" alt="mô tả" width="200"&gt;</div><div class="desc">Thẻ tự đóng, không cần &lt;/img&gt;</div></div>
+    <div class="ri"><div class="fn">Bảng HTML</div><div class="syn">&lt;table&gt;&lt;tr&gt;&lt;th&gt;TH&lt;/th&gt;&lt;td&gt;TD&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</div><div class="desc">th: tiêu đề (đậm) | td: dữ liệu</div></div>
+    <div class="ri"><div class="fn">Danh sách</div><div class="syn">&lt;ul&gt;&lt;li&gt;mục 1&lt;/li&gt;&lt;/ul&gt;</div><div class="desc">ul: không thứ tự | ol: có số thứ tự</div></div>
+    <div class="ri"><div class="fn">CSS màu sắc</div><div class="syn">color: red; background-color: #fff;</div><div class="desc">Tên màu tiếng Anh hoặc mã hex</div></div>
+    <div class="ri"><div class="fn">CSS hộp mô hình</div><div class="syn">margin: 10px; padding: 15px; border: 1px solid;</div><div class="desc">margin ngoài · padding trong · border viền</div></div>
+  </div>
+</div>
+
+<!-- Quick ref: SQL -->
+<div class="ref-wrap">
+  <h2 style="color:#67e8f9">⚡ BẢNG TRA CỨU NHANH – CÂU LỆNH SQL TRỌNG TÂM</h2>
+  <div class="ref-grid">
+    <div class="ri" style="border-color:rgba(103,232,249,.15)"><div class="fn" style="color:#67e8f9">Lấy tất cả dữ liệu</div><div class="syn">SELECT * FROM HocSinh;</div><div class="desc">Lấy toàn bộ cột và hàng từ bảng HocSinh</div></div>
+    <div class="ri" style="border-color:rgba(103,232,249,.15)"><div class="fn" style="color:#67e8f9">Lọc có điều kiện</div><div class="syn">SELECT * FROM HocSinh WHERE DiemTB &gt;= 8.0;</div><div class="desc">Lấy học sinh có điểm TB từ 8.0 trở lên</div></div>
+    <div class="ri" style="border-color:rgba(103,232,249,.15)"><div class="fn" style="color:#67e8f9">Sắp xếp kết quả</div><div class="syn">SELECT HoTen, DiemTB FROM HocSinh ORDER BY DiemTB DESC;</div><div class="desc">Sắp xếp giảm dần theo điểm TB</div></div>
+    <div class="ri" style="border-color:rgba(103,232,249,.15)"><div class="fn" style="color:#67e8f9">Đếm bản ghi</div><div class="syn">SELECT COUNT(*) FROM HocSinh WHERE Lop = '12A1';</div><div class="desc">Đếm số học sinh lớp 12A1</div></div>
+    <div class="ri" style="border-color:rgba(103,232,249,.15)"><div class="fn" style="color:#67e8f9">Tính trung bình</div><div class="syn">SELECT AVG(DiemTB) FROM HocSinh;</div><div class="desc">Tính điểm trung bình của tất cả học sinh</div></div>
+    <div class="ri" style="border-color:rgba(103,232,249,.15)"><div class="fn" style="color:#67e8f9">Tìm kiếm chuỗi</div><div class="syn">SELECT * FROM HocSinh WHERE HoTen LIKE 'Nguyễn%';</div><div class="desc">% thay cho nhiều ký tự bất kỳ</div></div>
+  </div>
+</div>
+
+<!-- Quick ref: Python -->
+<div class="ref-wrap">
+  <h2 style="color:#34d399">⚡ BẢNG TRA CỨU NHANH – PYTHON CƠ BẢN TRỌNG TÂM</h2>
+  <div class="ref-grid">
+    <div class="ri" style="border-color:rgba(52,211,153,.15)"><div class="fn" style="color:#34d399">Vòng for đếm</div><div class="syn">for i in range(1, 101):<br>    tong += i</div><div class="desc">Tính tổng từ 1 đến 100</div></div>
+    <div class="ri" style="border-color:rgba(52,211,153,.15)"><div class="fn" style="color:#34d399">Rẽ nhánh phân loại</div><div class="syn">if d &gt;= 8: print("Giỏi")<br>elif d &gt;= 6.5: print("Khá")<br>else: print("TB")</div><div class="desc">Phân loại học lực theo điểm</div></div>
+    <div class="ri" style="border-color:rgba(52,211,153,.15)"><div class="fn" style="color:#34d399">Định nghĩa hàm</div><div class="syn">def tinh_tong(a, b):<br>    return a + b<br>kq = tinh_tong(3, 5)</div><div class="desc">Hàm tính tổng 2 số</div></div>
+    <div class="ri" style="border-color:rgba(52,211,153,.15)"><div class="fn" style="color:#34d399">Số chẵn/lẻ</div><div class="syn">if so % 2 == 0:<br>    print("Chẵn")<br>else:<br>    print("Lẻ")</div><div class="desc">% là phép chia lấy phần dư (modulo)</div></div>
+  </div>
+</div>
+
+</div><!-- wrap -->
+</body>
+</html>

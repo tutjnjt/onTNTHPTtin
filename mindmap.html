@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mindmap – Tin Học THPT Cụm 308</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#07090f; --text:#e8eaf6; --sub:#8892b0; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); font-family:'Be Vietnam Pro',sans-serif; color:var(--text); height:100vh; overflow:hidden; }
+  #back { position:fixed; top:16px; left:16px; z-index:100; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12); color:#fff; padding:8px 18px; border-radius:20px; font-size:13px; cursor:pointer; text-decoration:none; transition:background 0.2s; font-family:inherit; }
+  #back:hover { background:rgba(255,255,255,0.14); }
+  #title-bar { position:fixed; top:16px; left:50%; transform:translateX(-50%); font-family:'Bebas Neue',sans-serif; letter-spacing:3px; font-size:18px; background:linear-gradient(90deg,#00d4ff,#7c3aed); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; z-index:100; white-space:nowrap; }
+  #hint { position:fixed; bottom:16px; left:50%; transform:translateX(-50%); color:var(--sub); font-size:12px; z-index:100; white-space:nowrap; letter-spacing:0.5px; }
+  #tooltip { position:fixed; background:rgba(10,14,30,0.97); border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:14px 18px; max-width:300px; font-size:13px; line-height:1.75; pointer-events:none; opacity:0; transition:opacity 0.2s; z-index:200; color:var(--text); }
+  #tooltip strong { display:block; font-size:14px; margin-bottom:6px; }
+  #cam-label { position:fixed; bottom:40px; left:50%; transform:translateX(-50%); color:rgba(255,255,255,0.25); font-size:11px; letter-spacing:1px; }
+</style>
+</head>
+<body>
+<a href="index.html" id="back">← Trang chủ</a>
+<div id="title-bar">SƠ ĐỒ TƯ DUY – TIN HỌC THPT 2025-2026 · CỤM 308</div>
+<div id="hint">🖱 Di chuột lên nút xem chi tiết · Kéo để di chuyển sơ đồ</div>
+<div id="cam-label">Cuộn để zoom · Kéo để pan</div>
+<div id="tooltip"></div>
+<canvas id="c"></canvas>
+<script>
+const C = document.getElementById('c');
+const ctx = C.getContext('2d');
+const tip = document.getElementById('tooltip');
+let W, H, ox=0, oy=0, scale=1, dragging=false, dsx, dsy;
+
+function resize(){ W=C.width=window.innerWidth; H=C.height=window.innerHeight; draw(); }
+window.addEventListener('resize', resize);
+
+const ROOT = {
+  id:'root', label:'TIN HỌC\nTHPT\n2025–26', px:0, py:0, r:56,
+  color:'#00d4ff', glow:'rgba(0,212,255,0.45)',
+  desc:'Chương trình GDPT 2018\nĐịnh hướng Tin học ứng dụng (ICT)\nCụm 308 – Phú Thọ\n\n📋 Đề thi: 40 câu · 50 phút\nPhần I: 24 câu TN chọn đáp án\nPhần II: 4 câu TN đúng/sai',
+  children:[
+    {
+      id:'A', label:'12A\nTRÍ TUỆ\nNHÂN TẠO', r:40, color:'#ff6b35', glow:'rgba(255,107,53,0.35)',
+      desc:'📌 Câu 1–4 (Phần I)\n─────────────────\nCâu 1: Nhận biết (biết)\nCâu 2,3: Thông hiểu\nCâu 4: Vận dụng\n\n🎯 Trọng tâm:\n• Khái niệm AI / Trí tuệ nhân tạo\n• Ứng dụng AI trong đời sống\n• Các lĩnh vực AI tác động\n• Cảnh báo về AI',
+      angle:-Math.PI*0.72, dist:230,
+      children:[
+        {id:'A1', label:'AI là gì?', r:24, color:'#ff9f68', angle:-Math.PI*0.90, dist:145,
+         desc:'• Định nghĩa AI (trí tuệ nhân tạo)\n• Máy tính thực hiện công việc mang tính trí tuệ của con người\n• Lịch sử: Hội thảo Dartmouth 1956\n• AI hẹp (ANI) vs AI rộng (AGI)'},
+        {id:'A2', label:'Ứng dụng\nAI', r:24, color:'#ff9f68', angle:-Math.PI*0.65, dist:145,
+         desc:'• Google Dịch – dịch máy\n• Nhận dạng khuôn mặt\n• Xe tự lái\n• Trợ lý ảo (Siri, ChatGPT)\n• AI trong y tế, tài chính, sản xuất'},
+        {id:'A3', label:'Cảnh báo\nvề AI', r:24, color:'#ff9f68', angle:-Math.PI*0.50, dist:145,
+         desc:'• Mất việc làm do tự động hóa\n• Vấn đề đạo đức AI\n• Deepfake và thông tin giả\n• AI vũ khí hóa\n• Quyền riêng tư dữ liệu'},
+      ]
+    },
+    {
+      id:'B', label:'12B\nMẠNG MÁY\nTÍNH', r:40, color:'#00d4ff', glow:'rgba(0,212,255,0.35)',
+      desc:'📌 Câu 5–9 (Phần I) + Câu 1 (Phần II Chung)\n─────────────────\nPhần I: 1 biết, 1 hiểu, 1 vận dụng\nPhần II: a biết · b hiểu · c,d vận dụng\n\n🎯 Trọng tâm:\n• Thiết bị mạng (router, switch, hub)\n• Giao thức mạng TCP/IP\n• Chia sẻ tài nguyên trên mạng\n• Địa chỉ IP, DNS',
+      angle:-Math.PI*0.18, dist:230,
+      children:[
+        {id:'B1', label:'Thiết bị\nmạng', r:24, color:'#38bdf8', angle:-Math.PI*0.08, dist:145,
+         desc:'• Router (bộ định tuyến): kết nối mạng khác nhau\n• Switch (bộ chuyển mạch): kết nối nội bộ\n• Hub: phân phối tín hiệu (cũ)\n• Modem: chuyển đổi tín hiệu\n• Access Point: phát WiFi'},
+        {id:'B2', label:'Giao thức\nTCP/IP', r:24, color:'#38bdf8', angle:Math.PI*0.08, dist:145,
+         desc:'• TCP/IP: bộ giao thức chuẩn Internet\n• IP: địa chỉ định danh thiết bị\n• IPv4 (32 bit) và IPv6 (128 bit)\n• HTTP/HTTPS: web\n• DNS: phân giải tên miền → IP'},
+        {id:'B3', label:'Chia sẻ\ntài nguyên', r:24, color:'#38bdf8', angle:-Math.PI*0.30, dist:145,
+         desc:'• Chia sẻ file, máy in qua mạng\n• Workgroup và Domain\n• Phân quyền truy cập\n• Thực hành: chia sẻ thư mục trong Windows'},
+      ]
+    },
+    {
+      id:'F12', label:'12F\nTẠO\nTRANG WEB', r:40, color:'#7c3aed', glow:'rgba(124,58,237,0.35)',
+      desc:'📌 Câu 10–13 (Phần I) + Câu 5 (Phần II ICT)\n─────────────────\nPhần I: 2 biết, 1 hiểu, 1 vận dụng\nPhần II ICT: a,b biết · c hiểu · d vận dụng\n\n🎯 Trọng tâm:\n• Cấu trúc HTML (thẻ, thuộc tính)\n• CSS định dạng trang web\n• Thực hành tạo trang web đơn giản',
+      angle:Math.PI*0.28, dist:230,
+      children:[
+        {id:'F12a', label:'HTML\nCơ bản', r:24, color:'#a78bfa', angle:Math.PI*0.16, dist:145,
+         desc:'• Cấu trúc: <!DOCTYPE>, <html>, <head>, <body>\n• Thẻ tiêu đề: <h1>–<h6>\n• Đoạn văn: <p>, ngắt dòng: <br>\n• Liên kết: <a href="">\n• Hình ảnh: <img src="">\n• Danh sách: <ul>, <ol>, <li>'},
+        {id:'F12b', label:'HTML\nBảng & Form', r:24, color:'#a78bfa', angle:Math.PI*0.35, dist:145,
+         desc:'• Bảng: <table>, <tr>, <th>, <td>\n• Thuộc tính colspan, rowspan\n• Form: <form>, <input>, <button>\n• type: text, radio, checkbox, submit\n• Thẻ <div> và <span>'},
+        {id:'F12c', label:'CSS\nĐịnh dạng', r:24, color:'#a78bfa', angle:Math.PI*0.50, dist:145,
+         desc:'• CSS nội tuyến, nhúng, ngoài\n• Selector: tag, class (.), id (#)\n• Thuộc tính: color, background\n• font-size, font-family, text-align\n• margin, padding, border, width, height'},
+      ]
+    },
+    {
+      id:'F10', label:'10F\nLẬP TRÌNH\nCƠ BẢN', r:40, color:'#10b981', glow:'rgba(16,185,129,0.35)',
+      desc:'📌 Câu 14–18 (Phần I)\n─────────────────\nCâu 14,15: Nhận biết\nCâu 16,17: Thông hiểu\nCâu 18: Vận dụng\n\n🎯 Trọng tâm:\n• Cấu trúc lệnh cơ bản (if, for, while)\n• Kiểu dữ liệu, biến\n• Hàm\n• Đọc/hiểu đoạn code Python/C++',
+      angle:Math.PI*0.72, dist:230,
+      children:[
+        {id:'F10a', label:'Biến &\nKiểu DL', r:24, color:'#34d399', angle:Math.PI*0.56, dist:145,
+         desc:'• Biến (variable): lưu trữ dữ liệu\n• Kiểu số nguyên (int)\n• Kiểu số thực (float)\n• Kiểu chuỗi (string/str)\n• Kiểu logic (bool): True/False\n• Khai báo và gán giá trị'},
+        {id:'F10b', label:'Lệnh rẽ\nnhánh', r:24, color:'#34d399', angle:Math.PI*0.76, dist:145,
+         desc:'• if ... else ...\n• if ... elif ... else (Python)\n• So sánh: ==, !=, >, <, >=, <=\n• Logic: and, or, not\n• Lệnh lồng nhau (nested if)'},
+        {id:'F10c', label:'Vòng lặp\n& Hàm', r:24, color:'#34d399', angle:Math.PI*0.92, dist:145,
+         desc:'• for i in range(n): (Python)\n• while điều_kiện:\n• Hàm: def tên_hàm(tham_số):\n• return giá_trị\n• Gọi hàm, truyền tham số\n• Bước đọc code: xác định input → output'},
+      ]
+    },
+    {
+      id:'D', label:'12D\nĐẠO ĐỨC\nMÔI TRƯỜNG SỐ', r:40, color:'#f59e0b', glow:'rgba(245,158,11,0.35)',
+      desc:'📌 Câu 19–22 (Phần I)\n─────────────────\nCâu 19,20: Nhận biết\nCâu 21: Thông hiểu\nCâu 22: Vận dụng\n\n🎯 Trọng tâm:\n• Giao tiếp ứng xử trên mạng xã hội\n• Bản quyền, sở hữu trí tuệ số\n• Pháp luật về CNTT\n• Văn hóa số',
+      angle:-Math.PI*1.15, dist:230,
+      children:[
+        {id:'D1', label:'Ứng xử\ntrên mạng', r:24, color:'#fcd34d', angle:-Math.PI*1.00, dist:145,
+         desc:'• Nguyên tắc giao tiếp văn minh số\n• Không đăng thông tin sai sự thật\n• Bảo vệ thông tin cá nhân\n• Tránh bắt nạt mạng (cyberbullying)\n• Quyền và nghĩa vụ người dùng MXH'},
+        {id:'D2', label:'Bản quyền\n& Pháp luật', r:24, color:'#fcd34d', angle:-Math.PI*1.22, dist:145,
+         desc:'• Luật CNTT, Luật An ninh mạng\n• Bản quyền phần mềm: mua bản quyền\n• Creative Commons License\n• Nghiêm cấm: tán phát thông tin giả\n• Trách nhiệm pháp lý khi vi phạm'},
+        {id:'D3', label:'Văn hóa\nsố', r:24, color:'#fcd34d', angle:-Math.PI*0.88, dist:145,
+         desc:'• Sử dụng mạng có trách nhiệm\n• Bảo vệ dữ liệu cá nhân (GDPR tinh thần)\n• Nhận biết tin giả (fake news)\n• Kỹ năng số an toàn\n• Sức khỏe số (hạn chế màn hình)'},
+      ]
+    },
+    {
+      id:'G', label:'12G\nHƯỚNG\nNGHIỆP', r:40, color:'#ec4899', glow:'rgba(236,72,153,0.35)',
+      desc:'📌 Câu 23–24 (Phần I)\n─────────────────\nCâu 23: Nhận biết\nCâu 24: Thông hiểu\n\n🎯 Trọng tâm:\n• Nhóm nghề dịch vụ và quản trị CNTT\n• Các ngành nghề liên quan Tin học\n• Yêu cầu năng lực nghề IT\n• Xu hướng nghề nghiệp số',
+      angle:-Math.PI*1.55, dist:230,
+      children:[
+        {id:'G1', label:'Nhóm\nnghề IT', r:24, color:'#f472b6', angle:-Math.PI*1.42, dist:145,
+         desc:'• Lập trình viên (Developer)\n• Quản trị mạng / hệ thống\n• Kỹ sư dữ liệu (Data Engineer)\n• An ninh mạng (Cyber Security)\n• Thiết kế UI/UX'},
+        {id:'G2', label:'Dịch vụ &\nQuản trị', r:24, color:'#f472b6', angle:-Math.PI*1.68, dist:145,
+         desc:'• Quản trị CSDL (DBA)\n• Hỗ trợ kỹ thuật (IT Support)\n• Cloud Computing / DevOps\n• Digital Marketing\n• Quản lý dự án CNTT (PM)'},
+      ]
+    },
+    {
+      id:'F11', label:'11F\nCƠ SỞ\nDỮ LIỆU', r:40, color:'#06b6d4', glow:'rgba(6,182,212,0.35)',
+      desc:'📌 Câu 2 (Phần II Chung) + Câu 6 (Phần II ICT)\n─────────────────\nPhần II Chung: a biết · b hiểu · c,d vận dụng\nPhần II ICT: a,b biết · c hiểu · d vận dụng\n\n🎯 Trọng tâm:\n• Khái niệm CSDL, bảng, bản ghi\n• Câu lệnh SQL cơ bản\n• Thực hành tạo và khai thác CSDL',
+      angle:Math.PI*1.15, dist:230,
+      children:[
+        {id:'F11a', label:'Khái niệm\nCSDL', r:24, color:'#67e8f9', angle:Math.PI*1.02, dist:145,
+         desc:'• CSDL (Database): tập dữ liệu có cấu trúc\n• Bảng (Table), Bản ghi (Record), Trường (Field)\n• Khóa chính (Primary Key)\n• Hệ quản trị CSDL: MySQL, Access\n• Mô hình quan hệ (Relational)'},
+        {id:'F11b', label:'SQL\nCơ bản', r:24, color:'#67e8f9', angle:Math.PI*1.28, dist:145,
+         desc:'• SELECT ... FROM ... WHERE ...\n• SELECT * FROM Bảng\n• WHERE điều_kiện (=, >, <, LIKE)\n• ORDER BY cột ASC/DESC\n• INSERT, UPDATE, DELETE (cơ bản)\n• COUNT(), SUM(), AVG()'},
+      ]
+    },
+  ]
+};
+
+// Tính tọa độ px/py cho tất cả node trước khi vẽ
+function setPos(node, parentX, parentY){
+  if(node.id === 'root'){
+    node.px = 0; node.py = 0;
+  } else {
+    node.px = parentX + Math.cos(node.angle) * node.dist;
+    node.py = parentY + Math.sin(node.angle) * node.dist;
+  }
+  if(node.children){
+    node.children.forEach(c => setPos(c, node.px, node.py));
+  }
+}
+setPos(ROOT, 0, 0);
+
+function flat(n, a=[]){ a.push(n); (n.children||[]).forEach(c=>flat(c,a)); return a; }
+const ALL = flat(ROOT);
+
+function tx(n){ return (n.px||0)*scale + ox + W/2; }
+function ty(n){ return (n.py||0)*scale + oy + H/2; }
+
+function isFiniteXY(x, y){ return isFinite(x) && isFinite(y); }
+
+function drawEdge(p, c){
+  const x1=tx(p), y1=ty(p), x2=tx(c), y2=ty(c);
+  if(!isFiniteXY(x1,y1)||!isFiniteXY(x2,y2)) return;
+  ctx.beginPath();
+  ctx.moveTo(x1,y1);
+  const mx=(x1+x2)/2;
+  ctx.bezierCurveTo(mx, y1, mx, y2, x2, y2);
+  ctx.strokeStyle = c.color+'55';
+  ctx.lineWidth = Math.max(1, 1.5*scale);
+  ctx.stroke();
+}
+
+function drawNode(n){
+  const cx=tx(n), cy=ty(n), r=n.r*scale;
+  if(!isFiniteXY(cx,cy)||!isFinite(r)||r<=0) return;
+  if(n.glow){
+    try {
+      const g=ctx.createRadialGradient(cx,cy,0,cx,cy,r*2.4);
+      g.addColorStop(0, n.glow); g.addColorStop(1,'transparent');
+      ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx,cy,r*2.4,0,Math.PI*2); ctx.fill();
+    } catch(e){}
+  }
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
+  ctx.fillStyle='rgba(7,9,15,0.92)'; ctx.fill();
+  ctx.strokeStyle=n.color; ctx.lineWidth=n.id==='root'?3*scale:2*scale; ctx.stroke();
+  ctx.fillStyle=n.id==='root'?'#fff':n.color;
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  const lines=n.label.split('\n');
+  const fs=Math.max(7, (n.id==='root'?13:n.r>35?11:9.5)*scale);
+  ctx.font=`700 ${fs}px 'Be Vietnam Pro'`;
+  const lh=fs+3;
+  lines.forEach((l,i)=>ctx.fillText(l, cx, cy-(lines.length-1)*lh/2+i*lh));
+}
+
+function drawEdges(n){ (n.children||[]).forEach(c=>{ drawEdge(n,c); drawEdges(c); }); }
+
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#07090f'; ctx.fillRect(0,0,W,H);
+  drawEdges(ROOT);
+  ALL.forEach(drawNode);
+}
+
+resize();
+
+// Drag
+C.addEventListener('mousedown', e=>{ dragging=true; dsx=e.clientX-ox; dsy=e.clientY-oy; });
+window.addEventListener('mouseup', ()=>dragging=false);
+window.addEventListener('mousemove', e=>{
+  if(dragging){ ox=e.clientX-dsx; oy=e.clientY-dsy; draw(); return; }
+  const mx=e.clientX, my=e.clientY;
+  let found=null;
+  ALL.forEach(n=>{ if(Math.hypot(mx-tx(n), my-ty(n))<n.r*scale+8) found=n; });
+  if(found){
+    tip.style.opacity='1';
+    let lx=mx+18, ly=my-10;
+    if(lx+310>W) lx=mx-320;
+    if(ly+200>H) ly=H-210;
+    tip.style.left=lx+'px'; tip.style.top=ly+'px';
+    tip.innerHTML=`<strong style="color:${found.color}">${found.label.replace(/\n/g,' ')}</strong>${found.desc.replace(/\n/g,'<br>')}`;
+  } else { tip.style.opacity='0'; }
+});
+
+// Zoom
+C.addEventListener('wheel', e=>{
+  e.preventDefault();
+  const factor = e.deltaY<0?1.1:0.91;
+  const mx=e.clientX, my=e.clientY;
+  ox = mx - (mx-ox)*factor;
+  oy = my - (my-oy)*factor;
+  scale = Math.min(3, Math.max(0.3, scale*factor));
+  draw();
+}, {passive:false});
+
+// Touch
+let lastTouchDist=0;
+C.addEventListener('touchstart', e=>{ dragging=true; dsx=e.touches[0].clientX-ox; dsy=e.touches[0].clientY-oy; e.preventDefault(); },{passive:false});
+C.addEventListener('touchend', ()=>dragging=false);
+C.addEventListener('touchmove', e=>{
+  if(e.touches.length===1 && dragging){ ox=e.touches[0].clientX-dsx; oy=e.touches[0].clientY-dsy; draw(); }
+  e.preventDefault();
+},{passive:false});
+</script>
+</body>
+</html>
