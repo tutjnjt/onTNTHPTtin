@@ -289,6 +289,16 @@ const P2=[
    ]},
 ];
 
+// Escape HTML để tránh dấu nháy đơn, <, > làm vỡ innerHTML
+function esc(s){
+  return String(s)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/\n/g,'<br>');
+}
+
 // State
 let started=false, submitted=false, timeLeft=50*60, timerId=null;
 let p1Answers={}, p2Answers={}, startTime=null;
@@ -365,16 +375,16 @@ function renderExam(){
         <span class="qtag" style="background:${CATCOL[q.cat]}22;color:${CATCOL[q.cat]}">${CATNAME[q.cat]}</span>
         <span class="qlv ${q.lv==='B'?'lb':q.lv==='H'?'lh':'lv'}">${q.lv==='B'?'Nhận biết':q.lv==='H'?'Thông hiểu':'Vận dụng'}</span>
       </div>
-      <div class="qtext">${q.q}</div>
+      <div class="qtext">${esc(q.q)}</div>
       <div class="opts">
         ${q.opts.map((o,j)=>{
           let cls='opt';
           if(done){ cls+=(j===q.ans?' correct':(j===sel?' wrong-sel':'')); }
           else if(sel===j){ cls+=' selected'; }
-          return `<button class="${cls}" onclick="selAns(${i},${j})" ${done?'disabled':''}><span class="okey">${keys[j]}.</span>${o}</button>`;
+          return `<button class="${cls}" onclick="selAns(${i},${j})" ${done?'disabled':''}><span class="okey">${keys[j]}.</span>${esc(o)}</button>`;
         }).join('')}
       </div>
-      <div class="exp-box ${done?'show':''}" id="ep-${i}">✅ ${q.exp}</div>
+      <div class="exp-box ${done?'show':''}" id="ep-${i}">✅ ${esc(q.exp)}</div>
     </div>`;
   });
   // Part II
@@ -399,12 +409,12 @@ function renderExam(){
         }
         return `<div class="ds-item">
           <div class="di-label">Ý ${it.k} ${ii<2?'<span style="font-size:10px;color:#10b981">(0.1đ)</span>':'<span style="font-size:10px;color:#fcd34d">(0.25đ)</span>'}</div>
-          <div class="di-q">${it.q}</div>
+          <div class="di-q">${esc(it.q)}</div>
           <div class="di-btns">
             <button class="${tCls}" onclick="selDS(${cb.id},'${it.k}',true)" ${done?'disabled':''}>✅ ĐÚNG</button>
             <button class="${fCls}" onclick="selDS(${cb.id},'${it.k}',false)" ${done?'disabled':''}>❌ SAI</button>
           </div>
-          <div class="di-exp ${done?'show':''}" id="de-${cb.id}-${it.k}">📖 ${it.exp}</div>
+          <div class="di-exp ${done?'show':''}" id="de-${cb.id}-${it.k}">📖 ${esc(it.exp)}</div>
         </div>`;
       }).join('')}</div>
     </div>`;
