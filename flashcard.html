@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flashcard – Tin Học THPT Cụm 308</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#07090f;--card:#111827;--text:#e8eaf6;--sub:#8892b0;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);font-family:'Be Vietnam Pro',sans-serif;color:var(--text);min-height:100vh;}
+  .top{display:flex;align-items:center;justify-content:space-between;padding:14px 22px;border-bottom:1px solid rgba(255,255,255,.06);}
+  .back{color:var(--sub);text-decoration:none;font-size:13px;}.back:hover{color:var(--text);}
+  .title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;background:linear-gradient(90deg,#ff6b35,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .prog{font-size:13px;color:var(--sub);}
+  .filters{display:flex;gap:7px;padding:12px 20px;flex-wrap:wrap;}
+  .fb{padding:5px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.1);background:transparent;color:var(--sub);font-size:11px;cursor:pointer;font-family:inherit;transition:all .2s;white-space:nowrap;}
+  .fb.on,.fb:hover{color:#fff;}
+  .f0.on,.f0:hover{background:rgba(0,212,255,.12);border-color:#00d4ff;color:#00d4ff;}
+  .f1.on,.f1:hover{background:rgba(255,107,53,.12);border-color:#ff6b35;color:#ff6b35;}
+  .f2.on,.f2:hover{background:rgba(56,189,248,.12);border-color:#38bdf8;color:#38bdf8;}
+  .f3.on,.f3:hover{background:rgba(124,58,237,.12);border-color:#a78bfa;color:#a78bfa;}
+  .f4.on,.f4:hover{background:rgba(16,185,129,.12);border-color:#10b981;color:#10b981;}
+  .f5.on,.f5:hover{background:rgba(245,158,11,.12);border-color:#f59e0b;color:#fcd34d;}
+  .f6.on,.f6:hover{background:rgba(236,72,153,.12);border-color:#ec4899;color:#f472b6;}
+  .f7.on,.f7:hover{background:rgba(6,182,212,.12);border-color:#06b6d4;color:#67e8f9;}
+  .pbar{height:3px;background:rgba(255,255,255,.07);margin:0 20px 2px;border-radius:2px;overflow:hidden;}
+  .pfill{height:100%;background:linear-gradient(90deg,#ff6b35,#7c3aed);border-radius:2px;transition:width .4s;}
+  .hint{text-align:center;color:var(--sub);font-size:12px;margin:7px 0 14px;}
+  .scene{perspective:1200px;max-width:640px;margin:0 auto;padding:0 18px;}
+  .card3d{width:100%;height:280px;position:relative;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.4,0,.2,1);cursor:pointer;}
+  .card3d.flipped{transform:rotateY(180deg);}
+  .face{position:absolute;inset:0;border-radius:20px;backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:26px 30px;border:1px solid rgba(255,255,255,.08);}
+  .front{background:var(--card);}
+  .bface{background:#0d1424;transform:rotateY(180deg);}
+  .flabel{font-size:10px;letter-spacing:2px;font-weight:700;text-transform:uppercase;margin-bottom:10px;opacity:.45;}
+  .fq{font-size:16.5px;font-weight:700;text-align:center;line-height:1.55;}
+  .fa{font-size:13.5px;text-align:center;line-height:1.85;color:#c7d2fe;white-space:pre-wrap;}
+  .fcat{font-size:10.5px;font-weight:700;margin-top:10px;padding:3px 11px;border-radius:20px;}
+  .flv{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;margin-top:5px;}
+  .book-badge{font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:10px;margin-top:4px;letter-spacing:.5px;}
+  .bb-both{background:rgba(255,255,255,.1);color:rgba(255,255,255,.6);}
+  .bb-cd{background:rgba(245,158,11,.15);color:#fcd34d;}
+  .bb-kntt{background:rgba(0,212,255,.12);color:#00d4ff;}
+  .controls{display:flex;gap:10px;justify-content:center;margin:12px 0 10px;}
+  .btn{padding:10px 22px;border-radius:10px;border:none;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;}
+  .bprev{background:rgba(255,255,255,.07);color:var(--sub);}.bprev:hover{background:rgba(255,255,255,.12);color:var(--text);}
+  .bflip{background:#ff6b35;color:#fff;}.bflip:hover{transform:scale(1.04);}
+  .bnext{background:rgba(255,255,255,.07);color:var(--sub);}.bnext:hover{background:rgba(255,255,255,.12);color:var(--text);}
+  .bai{background:linear-gradient(135deg,#7c3aed,#00d4ff);color:#fff;width:calc(100% - 36px);max-width:600px;display:block;margin:0 auto 10px;border:none;border-radius:12px;padding:11px;font-family:inherit;font-size:13.5px;font-weight:700;cursor:pointer;transition:all .2s;}
+  .bai:hover{opacity:.9;transform:scale(1.01);}
+  .aibox{background:#0d1424;border:1px solid rgba(124,58,237,.3);border-radius:14px;padding:16px 20px;margin:0 18px 16px;font-size:13px;line-height:1.85;color:#c7d2fe;display:none;}
+  .aibox.show{display:block;animation:fi .3s ease;}
+  .think{color:var(--sub);font-style:italic;}
+  @keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="top">
+  <a href="index.html" class="back">← Trang chủ</a>
+  <div class="title">FLASHCARD ÔN TẬP · CỤM 308</div>
+  <div class="prog"><span id="cur">1</span>/<span id="tot">1</span></div>
+</div>
+<div class="filters">
+  <button class="fb f0 on" onclick="sf(0,this)">Tất cả</button>
+  <button class="fb f1" onclick="sf(1,this)">🤖 12A · AI</button>
+  <button class="fb f2" onclick="sf(2,this)">🌐 12B · Mạng</button>
+  <button class="fb f3" onclick="sf(3,this)">🌐 12F · Web</button>
+  <button class="fb f4" onclick="sf(4,this)">💻 10F · Python</button>
+  <button class="fb f5" onclick="sf(5,this)">⚖️ 12D · Đạo đức</button>
+  <button class="fb f6" onclick="sf(6,this)">🎯 12G · Hướng nghiệp</button>
+  <button class="fb f7" onclick="sf(7,this)">🗄️ 11F · CSDL</button>
+</div>
+<div class="pbar"><div class="pfill" id="pf"></div></div>
+<p class="hint">👆 Click thẻ để lật · Dùng nút điều hướng · <span style="color:#fcd34d">🟡 Cánh Diều</span> · <span style="color:#00d4ff">🔵 KNTT</span> · ⚪ Chung</p>
+<div class="scene">
+  <div class="card3d" id="c3d" onclick="flip()">
+    <div class="face front">
+      <div class="flabel">CÂU HỎI</div>
+      <div class="fq" id="fq"></div>
+      <div class="fcat" id="fcat"></div>
+      <div class="flv" id="flv"></div>
+      <div class="book-badge" id="fbook"></div>
+    </div>
+    <div class="face bface">
+      <div class="flabel" style="color:#7c3aed">ĐÁP ÁN</div>
+      <div class="fa" id="fa"></div>
+    </div>
+  </div>
+</div>
+<div class="controls">
+  <button class="btn bprev" onclick="prev()">◀ Trước</button>
+  <button class="btn bflip" onclick="flip()">🔄 Lật thẻ</button>
+  <button class="btn bnext" onclick="nxt()">Tiếp ▶</button>
+</div>
+<button class="bai" onclick="askAI()">✨ AI giải thích sâu hơn (Claude)</button>
+<div class="aibox" id="aib"></div>
+
+<script>
+// book: 'both'=chung 2 bộ, 'kntt'=Kết nối tri thức, 'cd'=Cánh Diều
+// lv: B=Biết, H=Hiểu, V=Vận dụng
+const CARDS=[
+  // ===== 12A – TRÍ TUỆ NHÂN TẠO =====
+  {cat:1,lv:'B',book:'both',
+   q:'Trí tuệ nhân tạo (AI) là gì? Nêu định nghĩa cơ bản.',
+   a:'AI là khả năng của máy tính thực hiện những công việc mang tính trí tuệ của con người như:\n• Đọc chữ, nhận dạng giọng nói\n• Dịch thuật ngôn ngữ\n• Học và ra quyết định\n• Lái xe tự động'},
+  {cat:1,lv:'B',book:'both',
+   q:'Hội thảo Dartmouth (1956) có ý nghĩa gì với lịch sử AI?',
+   a:'Hội thảo tại Đại học Dartmouth, New Hampshire (Mỹ) năm 1956:\n• Là mốc ra đời thuật ngữ "Artificial Intelligence" (AI)\n• Khởi đầu chính thức lĩnh vực Trí tuệ nhân tạo\n• John McCarthy đặt tên AI tại đây'},
+  {cat:1,lv:'H',book:'kntt',
+   q:'Phân biệt AI hẹp (ANI) và AI mạnh/rộng (AGI).',
+   a:'AI hẹp (ANI – Narrow AI):\n• Chỉ làm tốt MỘT nhiệm vụ cụ thể\n• VD: AlphaGo chỉ chơi cờ vây\n• TẤT CẢ AI hiện tại đều là ANI\n\nAI mạnh/rộng (AGI):\n• Làm nhiều việc thông minh như con người\n• Chưa tồn tại, vẫn là mục tiêu tương lai\n(KNTT gọi là AI hẹp/rộng)'},
+  {cat:1,lv:'H',book:'cd',
+   q:'Cánh Diều: Phân biệt AI yếu và AI mạnh. Các lĩnh vực nghiên cứu AI là gì?',
+   a:'AI yếu: chỉ thực hiện tốt 1 tác vụ cụ thể (hiện tại)\nAI mạnh: thực hiện bất kỳ nhiệm vụ trí tuệ như người (chưa có)\n\n4 lĩnh vực nghiên cứu AI (Cánh Diều):\n1. Học máy (Machine Learning)\n2. Xử lí ngôn ngữ tự nhiên (NLP)\n3. Thị giác máy tính (Computer Vision)\n4. AI tạo sinh (Generative AI)'},
+  {cat:1,lv:'B',book:'cd',
+   q:'Kiểm tra Turing (Turing Test) là gì?',
+   a:'Bài kiểm tra do Alan Turing đề xuất:\n• Người thẩm vấn C hỏi cả người B và máy A\n• C không nhìn thấy A và B\n• Nếu C không phân biệt được máy hay người trả lời\n→ Máy được coi là CÓ TRÍ TUỆ\n\nĐây là tiêu chí kinh điển đánh giá AI có "thông minh" không.'},
+  {cat:1,lv:'H',book:'both',
+   q:'Kể 4–5 ứng dụng điển hình của AI trong đời sống và sản xuất.',
+   a:'• Y tế: phân tích X-quang, MRI; robot phẫu thuật\n• Tài chính: phát hiện gian lận (American Express dùng AI)\n• Giao thông: xe tự lái (Tesla), UAV không người lái\n• Sản xuất: kiểm tra chất lượng dây chuyền tự động\n• Tiêu dùng: Google Dịch, Face ID, ChatGPT, Siri'},
+  {cat:1,lv:'H',book:'cd',
+   q:'AI tạo sinh (Generative AI) là gì? Cho ví dụ.',
+   a:'AI tạo sinh: AI có khả năng TẠO RA nội dung mới\n(văn bản, hình ảnh, âm thanh, video)\n\nVí dụ:\n• Tạo văn bản: ChatGPT, Gemini\n• Tạo hình ảnh: Midjourney, DALL-E\n• Tạo âm nhạc: Mubert, Beatoven\n• Tạo video: Sora (OpenAI)\n\n⚠️ Nguy cơ: Deepfake – nội dung giả rất chân thực'},
+  {cat:1,lv:'V',book:'both',
+   q:'Nêu những cảnh báo về sự phát triển của AI. Deepfake nguy hiểm như thế nào?',
+   a:'Cảnh báo về AI:\n• Mất việc làm do tự động hóa hàng loạt\n• Vi phạm quyền riêng tư (AI thu thập dữ liệu cá nhân)\n• Đe dọa an ninh: AI bị dùng để tấn công mạng\n• Thiếu quy định pháp lý rõ ràng\n\nDeepfake: AI tạo video/ảnh/giọng nói giả mạo người thật\n→ Lừa đảo, bôi nhọ, tung tin giả nguy hiểm'},
+  // ===== 12B – MẠNG MÁY TÍNH =====
+  {cat:2,lv:'B',book:'both',
+   q:'Nêu chức năng của Router, Switch, Access Point và Modem.',
+   a:'Router: kết nối các mạng khác nhau, định tuyến gói tin theo IP\nSwitch: gửi gói tin đúng cổng đích theo địa chỉ MAC (thông minh hơn Hub)\nAccess Point (AP): phát sóng WiFi cho thiết bị không dây\nModem: chuyển đổi tín hiệu số ↔ tín hiệu đường truyền nhà mạng\n\nMẹo: Switch=Thông minh, Hub=Phát tất cả (cũ)'},
+  {cat:2,lv:'B',book:'both',
+   q:'Phân biệt mạng LAN và WLAN (Wi-Fi). Thành phần chính của mỗi loại.',
+   a:'LAN (Local Area Network):\n• Mạng có dây, phạm vi hẹp (tòa nhà, trường học)\n• Thiết bị: Switch, cáp mạng (cáp xoắn đôi)\n\nWLAN (Wireless LAN / Wi-Fi):\n• Mạng không dây\n• Thiết bị: Access Point (AP), NIC không dây\n• Ví dụ: mạng WiFi trường học, quán cà phê'},
+  {cat:2,lv:'H',book:'both',
+   q:'Giao thức TCP/IP gồm những tầng/giao thức nào? Nêu chức năng.',
+   a:'TCP/IP là bộ giao thức chuẩn Internet:\n• IP: địa chỉ hóa và định tuyến gói tin\n• TCP: truyền tin cậy, đảm bảo thứ tự, kiểm lỗi\n• HTTP/HTTPS: truy cập web (HTTPS có mã hóa TLS)\n• DNS: chuyển tên miền → địa chỉ IP\n• DHCP: cấp IP tự động cho thiết bị kết nối mạng'},
+  {cat:2,lv:'H',book:'both',
+   q:'Tên miền (domain name) là gì? Phân cấp tên miền như thế nào?',
+   a:'Tên miền: địa chỉ dạng chữ thay cho địa chỉ IP số\nVí dụ: google.com thay cho 142.250.190.14\n\nCấu trúc phân cấp:\n• Tên miền cấp cao nhất: .com .edu .vn .org\n• Tên miền cấp 2: google.com, truong.edu.vn\n• Tên miền cấp 3: mail.google.com, drive.google.com\n• Tên miền phụ (subdomain): www.example.com'},
+  {cat:2,lv:'B',book:'both',
+   q:'IPv4 và IPv6 khác nhau như thế nào? Tại sao cần IPv6?',
+   a:'IPv4: 32 bit, dạng thập phân a.b.c.d\n→ ~4.3 tỉ địa chỉ, đang CẠN KIỆT\n\nIPv6: 128 bit, dạng thập lục phân\n→ Gần như vô hạn địa chỉ\n→ Giải quyết vấn đề thiếu hụt địa chỉ IPv4\n\nIP riêng (Private): 192.168.x.x – chỉ dùng trong LAN\nIP công cộng (Public): do ISP cấp, dùng trên Internet'},
+  {cat:2,lv:'V',book:'cd',
+   q:'Cánh Diều: Thực hành kết nối và chia sẻ tài nguyên mạng. Các bước chia sẻ máy in?',
+   a:'Chia sẻ thư mục:\n1. Chuột phải thư mục → Properties → Sharing\n2. Advanced Sharing → tích "Share this folder"\n3. Đặt tên chia sẻ, phân quyền Read/Write → OK\n4. Truy cập: \\\\IP_máy\\tên_chia_sẻ\n\nChia sẻ máy in (Cánh Diều):\n1. Control Panel → Hardware and Sound → Devices and Printers\n2. Chuột phải máy in → Printer Properties → Sharing\n3. Tích "Share this printer" → đặt tên → OK'},
+  // ===== 12F – TẠO TRANG WEB =====
+  {cat:3,lv:'B',book:'both',
+   q:'Nêu cấu trúc cơ bản của một trang HTML và ý nghĩa từng phần.',
+   a:'<!DOCTYPE html>   ← khai báo HTML5\n<html>             ← thẻ gốc\n  <head>           ← thông tin ẩn\n    <meta charset="UTF-8">  ← tiếng Việt\n    <title>Tiêu đề tab</title>\n  </head>\n  <body>           ← nội dung hiển thị\n    ...\n  </body>\n</html>'},
+  {cat:3,lv:'B',book:'both',
+   q:'Các thẻ HTML nào tạo liên kết và hình ảnh? Nêu cú pháp.',
+   a:'Liên kết:\n<a href="url" target="_blank">Nhấn đây</a>\n• href: địa chỉ đích\n• target="_blank": mở tab mới\n\nHình ảnh (thẻ tự đóng):\n<img src="anh.jpg" alt="mô tả" width="200">\n• src: đường dẫn ảnh\n• alt: mô tả thay thế khi ảnh lỗi'},
+  {cat:3,lv:'H',book:'both',
+   q:'colspan và rowspan trong bảng HTML khác nhau thế nào? Ví dụ.',
+   a:'colspan="n": gộp n ô theo chiều NGANG (cột)\n<th colspan="3">Gộp 3 cột ngang</th>\n\nrowspan="n": gộp n ô theo chiều DỌC (hàng)\n<td rowspan="2">Gộp 2 hàng dọc</td>\n\nMẹo nhớ:\ncol = column = CỘT = NGANG\nrow = ROW = HÀNG = DỌC'},
+  {cat:3,lv:'H',book:'cd',
+   q:'Cánh Diều: Form HTML là gì? Các thành phần của form và thuộc tính action, method.',
+   a:'Form: giao diện thu nhận thông tin từ người dùng\n<form action="xu-ly.php" method="POST">\n\n• action: URL nhận và xử lý dữ liệu\n• method: GET (dữ liệu trong URL) | POST (ẩn trong body)\n\nCác điều khiển:\n• <input type="text">: ô nhập chữ\n• <input type="radio">: chọn một trong nhiều\n• <input type="checkbox">: chọn nhiều\n• <input type="submit">: nút gửi\n• <label>: nhãn mô tả cho điều khiển'},
+  {cat:3,lv:'H',book:'both',
+   q:'CSS: Phân biệt 3 loại selector. Độ ưu tiên CSS là gì?',
+   a:'Tag selector: áp dụng cho TẤT CẢ thẻ cùng loại\n  p { color: blue; }\n\nClass selector (.): áp dụng cho class="ten"\n  .ten { font-weight: bold; }\n\nID selector (#): áp dụng cho id="ten" (duy nhất)\n  #tieu-de { font-size: 24px; }\n\nĐộ ưu tiên (cao → thấp):\nInline style > #id > .class > tag > browser default'},
+  {cat:3,lv:'H',book:'cd',
+   q:'Cánh Diều: CSS Internal và External khác nhau thế nào? Cú pháp liên kết file CSS ngoài.',
+   a:'Internal CSS (CSS trong):\nViết trong thẻ <style> ở <head>\n<style> p { color: red; } </style>\n\nExternal CSS (CSS ngoài):\nViết trong file .css riêng, liên kết vào HTML:\n<link rel="stylesheet" href="style.css">\n\nƯu điểm external: dùng chung cho nhiều trang,\ndễ bảo trì, tách biệt nội dung và trình bày'},
+  {cat:3,lv:'V',book:'both',
+   q:'CSS Box Model: margin, border, padding, content khác nhau thế nào?',
+   a:'Từ ngoài vào trong:\n┌─── margin (ngoài viền) ───┐\n│  ┌── border (viền) ──┐   │\n│  │ ┌─ padding (trong)┐│   │\n│  │ │   content       ││   │\n│  │ └────────────────┘│   │\n│  └───────────────────┘   │\n└──────────────────────────┘\n\nmargin: đẩy các phần tử khác ra xa\npadding: khoảng cách nội dung với viền\nMẹo: "Padding = Đệm bên Trong"'},
+  // ===== 10F – LẬP TRÌNH PYTHON =====
+  {cat:4,lv:'B',book:'both',
+   q:'Các kiểu dữ liệu cơ bản trong Python. Cho ví dụ mỗi loại.',
+   a:'int: số nguyên  → x = 5\nfloat: số thực   → pi = 3.14\nstr: chuỗi       → ten = "An"\nbool: logic       → ok = True\nlist: danh sách  → ds = [1, 2, 3]\n\nChuyển đổi kiểu: int("5")=5, float("3.14")=3.14\nNhập từ bàn phím: input() → luôn trả về str'},
+  {cat:4,lv:'B',book:'both',
+   q:'Cú pháp vòng lặp for với range() trong Python. Các dạng range().',
+   a:'range(stop): 0 → stop-1\n  for i in range(5): → i=0,1,2,3,4\n\nrange(start, stop): start → stop-1\n  for i in range(1, 6): → i=1,2,3,4,5\n\nrange(start, stop, step): với bước nhảy\n  for i in range(0,10,2): → i=0,2,4,6,8\n\nMẹo: "Dừng TRƯỚC stop, nhảy theo step"'},
+  {cat:4,lv:'H',book:'both',
+   q:'Lệnh if-elif-else trong Python. Toán tử so sánh và logic.',
+   a:'if diem >= 8.0:\n    print("Giỏi")\nelif diem >= 6.5:\n    print("Khá")\nelif diem >= 5.0:\n    print("Trung bình")\nelse:\n    print("Yếu")\n\nSo sánh: == != > < >= <=\nLogic: and  or  not\n⚠️ Python dùng THỤT LỀ (indent), không dùng {}'},
+  {cat:4,lv:'H',book:'both',
+   q:'Vòng lặp while và sự khác biệt với for.',
+   a:'while điều_kiện:\n    # lệnh lặp\n    # PHẢI cập nhật biến để tránh vòng vô hạn!\n\nVí dụ đếm ngược:\ni = 5\nwhile i > 0:\n    print(i)\n    i -= 1\n\nSo sánh:\n• for: dùng khi BIẾT TRƯỚC số lần lặp\n• while: dùng khi CHƯA BIẾT số lần lặp'},
+  {cat:4,lv:'H',book:'both',
+   q:'Cú pháp định nghĩa và gọi hàm trong Python. Ví dụ hàm tính trung bình.',
+   a:'# Định nghĩa hàm\ndef tinh_tb(a, b, c):\n    return (a + b + c) / 3\n\n# Gọi hàm\nkq = tinh_tb(7, 8, 9)\nprint(kq)  # → 8.0\n\nQuy tắc:\n• Từ khóa: def (không phải function)\n• Thụt lề thân hàm\n• return: trả về giá trị (có thể bỏ)'},
+  {cat:4,lv:'V',book:'both',
+   q:'Đọc code: Hàm này làm gì?\ndef ham(ds):\n    kq = []\n    for x in ds:\n        if x % 2 != 0:\n            kq.append(x)\n    return kq\nprint(ham([1,2,3,4,5,6]))',
+   a:'Phân tích từng bước:\n• x % 2 != 0: lấy số LẺ (chia 2 không hết)\n• append(x): thêm x vào danh sách kq\n• Input: [1,2,3,4,5,6]\n• Số lẻ trong list: 1, 3, 5\n\nKết quả in ra: [1, 3, 5]\n\n💡 Đây là hàm LỌC SỐ LẺ từ danh sách'},
+  // ===== 12D – ĐẠO ĐỨC SỐ =====
+  {cat:5,lv:'B',book:'both',
+   q:'Luật An ninh mạng 2018 nghiêm cấm những hành vi nào?',
+   a:'Nghiêm cấm:\n• Đăng thông tin sai sự thật, tin giả (fake news)\n• Xúc phạm danh dự, nhân phẩm người khác\n• Tán phát nội dung bạo lực, khiêu dâm\n• Tấn công, xâm nhập hệ thống thông tin\n• Lừa đảo, chiếm đoạt tài sản qua mạng\n• Phát tán mã độc, virus\n\nVi phạm: bị phạt tiền hoặc truy cứu hình sự'},
+  {cat:5,lv:'B',book:'both',
+   q:'Phân biệt phần mềm bản quyền, Freeware và Open Source.',
+   a:'Bản quyền TM (Proprietary):\nPhải mua giấy phép mới dùng hợp pháp\nVD: Windows, Office, Photoshop\n\nFreeware: miễn phí, nhưng KHÔNG được sửa code\nVD: VLC, 7-Zip, Google Chrome\n\nOpen Source: dùng/xem/sửa/chia sẻ tự do\nVD: Linux, LibreOffice, Firefox, Python\n\nShareware: dùng thử có thời hạn, sau phải mua'},
+  {cat:5,lv:'H',book:'cd',
+   q:'Cánh Diều: Ứng xử nhân văn trong thế giới ảo là gì? Biểu hiện cụ thể?',
+   a:'"Nhân văn" là văn hoá của xã hội loài người.\nỨng xử nhân văn trên mạng thể hiện:\n• Có tình người, chân thành, đồng cảm\n• Bày tỏ sự ủng hộ khi người khác gặp khó khăn\n• Lan toả giá trị tích cực, tốt đẹp\n• Không bắt nạt, không miệt thị\n• Chia sẻ thông tin giúp cộng đồng\n\nKhác với ứng xử văn minh thông thường:\n→ Nhân văn còn đòi hỏi CẢM XÚC CHÂN THẬT'},
+  {cat:5,lv:'V',book:'both',
+   q:'Phân biệt Deepfake và Fake news. Cách nhận biết và phòng tránh?',
+   a:'Deepfake: AI tạo video/ảnh/giọng nói giả mạo người thật\n→ Rất khó phân biệt bằng mắt thường\n\nFake news: Tin giả được tạo và lan truyền trên MXH\n→ Gây hoang mang, chia rẽ xã hội\n\nCách nhận biết:\n• Kiểm tra nhiều nguồn uy tín khác nhau\n• Xem ngày đăng, tác giả có đáng tin không\n• Không chia sẻ khi chưa kiểm chứng\n\nPhòng tránh: Tư duy phản biện, fact-check'},
+  // ===== 12G – HƯỚNG NGHIỆP =====
+  {cat:6,lv:'B',book:'both',
+   q:'Nhóm nghề dịch vụ và quản trị CNTT bao gồm những nghề nào?',
+   a:'Nhóm nghề Dịch vụ & Quản trị (theo SGK 12G):\n• Quản trị và bảo trì hệ thống (SysAdmin)\n• Kỹ sư quản trị mạng (Network Admin)\n• Quản trị CSDL (DBA – Database Administrator)\n• Hỗ trợ kỹ thuật (IT Helpdesk/Support)\n• Chuyên gia An ninh mạng (Cybersecurity)\n• Cloud/DevOps Engineer'},
+  {cat:6,lv:'H',book:'cd',
+   q:'Cánh Diều: Công việc chính của nhà quản trị và bảo trì hệ thống là gì?',
+   a:'Nhà quản trị và bảo trì hệ thống:\n• Phân tích nhu cầu hệ thống thông tin tổ chức\n• Lập kế hoạch đảm bảo an toàn thông tin\n• Cài đặt phần cứng và phần mềm cho mạng\n• Tối ưu hoá, đánh giá hoạt động hệ thống\n• Thực hiện nâng cấp và sửa chữa cần thiết\n• Bồi dưỡng hướng dẫn người dùng trong tổ chức'},
+  {cat:6,lv:'H',book:'cd',
+   q:'Cánh Diều: Nghề lập trình trong ngành Truyền thông đa phương tiện là gì?',
+   a:'Nhà phát triển trang web (Web Developer):\n• Thiết kế giao diện người dùng và menu\n• Lập trình các trang web đa phương tiện\n• Tích hợp văn bản, hình ảnh, âm thanh, video\n• Kiểm tra hoạt động và đảm bảo mục tiêu tổ chức\n\nNhà thiết kế UI/UX:\n• Đảm bảo sản phẩm thân thiện, hấp dẫn, dễ dùng\n• Dùng kiến thức tâm lý học, y sinh học\n\nKỹ sư GIS: xây dựng và quản lý bản đồ số'},
+  // ===== 11F – CƠ SỞ DỮ LIỆU =====
+  {cat:7,lv:'B',book:'both',
+   q:'Các khái niệm cơ bản trong CSDL: bảng, bản ghi, trường, khóa chính.',
+   a:'Database (CSDL): tập dữ liệu có cấu trúc\nTable (Bảng): dữ liệu cùng chủ đề, gồm hàng và cột\nRecord (Bản ghi): MỘT HÀNG, ứng với 1 đối tượng\nField (Trường): MỘT CỘT, ứng với 1 thuộc tính\n\nPrimary Key (Khóa chính):\n• Định danh DUY NHẤT mỗi bản ghi\n• Không được TRÙNG và không được RỖNG\nVD: MaHS, CMND, Email'},
+  {cat:7,lv:'B',book:'both',
+   q:'Câu lệnh SQL SELECT cơ bản. Lấy tất cả dữ liệu và lọc có điều kiện.',
+   a:'Lấy tất cả:\nSELECT * FROM HocSinh;\n\nChọn cột cụ thể:\nSELECT HoTen, DiemTB FROM HocSinh;\n\nLọc có điều kiện:\nSELECT * FROM HocSinh WHERE DiemTB >= 8.0;\n\nKết hợp điều kiện:\nSELECT * FROM HocSinh\nWHERE Lop = \'12A1\' AND DiemTB >= 6.5;\n\nSắp xếp:\nORDER BY DiemTB DESC  ← giảm dần\nORDER BY DiemTB ASC   ← tăng dần (mặc định)'},
+  {cat:7,lv:'H',book:'both',
+   q:'LIKE trong SQL dùng để làm gì? Phân biệt % và _.',
+   a:'LIKE: tìm kiếm chuỗi theo mẫu\n\n%: thay cho NHIỀU ký tự bất kỳ\n  LIKE \'Nguyễn%\'  → bắt đầu bằng "Nguyễn"\n  LIKE \'%Anh\'     → kết thúc bằng "Anh"\n  LIKE \'%Minh%\'   → CHỨA "Minh"\n\n_: thay cho MỘT ký tự bất kỳ\n  LIKE \'_guyen\'   → 1 ký tự bất kỳ trước "guyen"\n\nVí dụ:\nWHERE HoTen LIKE \'Nguyễn%\''},
+  {cat:7,lv:'H',book:'both',
+   q:'Các hàm tổng hợp SQL: COUNT, SUM, AVG, MAX, MIN. Ví dụ.',
+   a:'COUNT(*): đếm số bản ghi\n  SELECT COUNT(*) FROM HocSinh;\n\nSUM(cột): tính TỔNG\n  SELECT SUM(DiemToan) FROM HocSinh;\n\nAVG(cột): tính TRUNG BÌNH\n  SELECT AVG(DiemTB) FROM HocSinh;\n\nMAX(cột): giá trị LỚN NHẤT\nMIN(cột): giá trị NHỎ NHẤT\n\n⚠️ Hay nhầm: AVG ≠ MAX\nAVG = trung bình, MAX = lớn nhất'},
+  {cat:7,lv:'V',book:'both',
+   q:'Phân tích câu SQL:\nSELECT HoTen, DiemTB FROM HocSinh WHERE DiemTB >= 8 ORDER BY DiemTB DESC;\nCâu này làm gì?',
+   a:'Phân tích từng phần:\n• SELECT HoTen, DiemTB: lấy 2 cột họ tên và điểm TB\n• FROM HocSinh: từ bảng HocSinh\n• WHERE DiemTB >= 8: lọc HS có điểm TB ≥ 8 (Giỏi)\n• ORDER BY DiemTB DESC: sắp xếp từ CAO → THẤP\n\nKết quả: danh sách học sinh Giỏi,\nsắp xếp từ điểm cao nhất xuống thấp nhất'},
+];
+
+const CATNAME={1:'🤖 12A · AI',2:'🌐 12B · Mạng',3:'🌐 12F · Web',4:'💻 10F · Python',5:'⚖️ 12D · Đạo đức',6:'🎯 12G · HN',7:'🗄️ 11F · CSDL'};
+const CATCOL={1:'#ff6b35',2:'#38bdf8',3:'#a78bfa',4:'#34d399',5:'#fcd34d',6:'#f472b6',7:'#67e8f9'};
+const LVNAME={B:'Nhận biết',H:'Thông hiểu',V:'Vận dụng'};
+const LVCOL={B:'rgba(16,185,129,.15)',H:'rgba(245,158,11,.15)',V:'rgba(239,68,68,.15)'};
+const LVTXT={B:'#10b981',H:'#fcd34d',V:'#f87171'};
+const BOOKLABEL={both:'⚪ Chung 2 bộ',kntt:'🔵 Kết nối tri thức',cd:'🟡 Cánh Diều'};
+const BOOKCLS={both:'bb-both',kntt:'bb-kntt',cd:'bb-cd'};
+
+let fil=[...CARDS], cur=0, flipped=false;
+
+function sf(f, btn){
+  document.querySelectorAll('.fb').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  fil = f===0?[...CARDS]:CARDS.filter(c=>c.cat===f);
+  cur=0; flipped=false; upd();
+}
+
+function upd(){
+  const c=fil[cur];
+  document.getElementById('fq').textContent=c.q;
+  document.getElementById('fa').textContent=c.a;
+  const ce=document.getElementById('fcat');
+  ce.textContent=CATNAME[c.cat]||'';
+  ce.style.background=(CATCOL[c.cat]||'#fff')+'22';
+  ce.style.color=CATCOL[c.cat]||'#fff';
+  const le=document.getElementById('flv');
+  le.textContent='Mức: '+LVNAME[c.lv];
+  le.style.background=LVCOL[c.lv]; le.style.color=LVTXT[c.lv];
+  const be=document.getElementById('fbook');
+  be.textContent=BOOKLABEL[c.book||'both'];
+  be.className='book-badge '+(BOOKCLS[c.book||'both']);
+  document.getElementById('cur').textContent=cur+1;
+  document.getElementById('tot').textContent=fil.length;
+  document.getElementById('pf').style.width=((cur+1)/fil.length*100)+'%';
+  document.getElementById('c3d').classList.remove('flipped');
+  document.getElementById('aib').className='aibox';
+  flipped=false;
+}
+
+function flip(){flipped=!flipped;document.getElementById('c3d').classList.toggle('flipped',flipped);}
+function nxt(){cur=(cur+1)%fil.length;upd();}
+function prev(){cur=(cur-1+fil.length)%fil.length;upd();}
+
+async function askAI(){
+  const c=fil[cur];
+  const box=document.getElementById('aib');
+  box.className='aibox show';
+  box.innerHTML='<span class="think">✨ AI đang phân tích...</span>';
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',max_tokens:900,
+        system:`Bạn là giáo viên Tin học dạy lớp 12 chương trình GDPT 2018 tại Phú Thọ, cụm 308.
+Bộ sách: ${c.book==='cd'?'Cánh Diều':c.book==='kntt'?'Kết nối tri thức':'cả Kết nối tri thức lẫn Cánh Diều'}.
+Giải thích ngắn gọn, dễ nhớ, có mẹo thi, liên hệ thực tế. Tối đa 170 từ. Tiếng Việt, emoji phù hợp.`,
+        messages:[{role:'user',content:`Chủ đề: ${CATNAME[c.cat]} | Mức: ${LVNAME[c.lv]}\nCâu hỏi: ${c.q}\nĐáp án: ${c.a}\n\nGiải thích sâu hơn, cho mẹo nhớ và liên hệ thực tế đề thi.`}]
+      })
+    });
+    const d=await res.json();
+    const t=d.content?.map(i=>i.text||'').join('')||'Không có phản hồi.';
+    box.innerHTML='<strong style="color:#a78bfa;display:block;margin-bottom:8px">✨ Giải thích từ AI (Claude):</strong>'+t.replace(/\n/g,'<br>');
+  }catch(e){box.innerHTML='⚠️ Không thể kết nối AI.';}
+}
+
+upd();
+</script>
+</body>
+</html>
