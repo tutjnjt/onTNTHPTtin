@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đề Thi Mô Phỏng – Tin Học THPT Cụm 308</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#07090f;--card:#0f172a;--text:#e8eaf6;--sub:#8892b0;--ok:#10b981;--no:#ef4444;--warn:#f59e0b;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);font-family:'Be Vietnam Pro',sans-serif;color:var(--text);min-height:100vh;}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 22px;border-bottom:1px solid rgba(255,255,255,.06);position:sticky;top:0;background:var(--bg);z-index:100;}
+  .back{color:var(--sub);text-decoration:none;font-size:13px;}.back:hover{color:var(--text);}
+  .title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;background:linear-gradient(90deg,#f59e0b,#ef4444);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  /* Timer */
+  .timer-bar{background:rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.06);padding:10px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+  .timer-display{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:3px;color:#00d4ff;min-width:90px;}
+  .timer-display.warn{color:#f59e0b;}
+  .timer-display.urgent{color:#ef4444;animation:blink .5s infinite;}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+  .timer-meta{font-size:12px;color:var(--sub);}
+  .progress-full{flex:1;min-width:120px;}
+  .pbar-full{height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;}
+  .pbar-fill{height:100%;background:linear-gradient(90deg,#10b981,#00d4ff);border-radius:3px;transition:width .3s;}
+  .score-live{font-family:'Bebas Neue',sans-serif;font-size:22px;color:#10b981;}
+  /* Controls */
+  .ctrl-bar{padding:12px 22px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;border-bottom:1px solid rgba(255,255,255,.06);}
+  .btn{padding:8px 20px;border-radius:10px;border:none;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;}
+  .btn-start{background:linear-gradient(135deg,#10b981,#00d4ff);color:#000;}
+  .btn-start:hover{transform:scale(1.04);}
+  .btn-submit{background:linear-gradient(135deg,#f59e0b,#ef4444);color:#000;}
+  .btn-submit:hover{transform:scale(1.04);}
+  .btn-reset{background:rgba(255,255,255,.08);color:var(--sub);}
+  .btn-reset:hover{background:rgba(255,255,255,.13);color:var(--text);}
+  .btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+  .exam-info{font-size:12px;color:var(--sub);margin-left:auto;}
+  /* Answer nav grid */
+  .nav-grid-wrap{padding:16px 22px 0;}
+  .nav-grid-title{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--sub);margin-bottom:10px;}
+  .nav-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
+  .ncell{width:36px;height:36px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:transparent;color:var(--sub);font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-family:inherit;}
+  .ncell:hover{border-color:rgba(0,212,255,.4);color:#00d4ff;}
+  .ncell.answered{background:rgba(0,212,255,.1);border-color:#00d4ff;color:#00d4ff;}
+  .ncell.current{background:#00d4ff;border-color:#00d4ff;color:#000;}
+  .ncell.correct{background:rgba(16,185,129,.2);border-color:#10b981;color:#10b981;}
+  .ncell.wrong{background:rgba(239,68,68,.2);border-color:#ef4444;color:#ef4444;}
+  .ncell.ds{border-color:rgba(255,107,53,.4);color:#ff6b35;}
+  /* Main content */
+  .content{max-width:840px;margin:0 auto;padding:20px 20px 80px;}
+  /* Section label */
+  .sec-label{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px 20px;margin-bottom:20px;}
+  .sl-title{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:2px;color:#00d4ff;}
+  .sl-desc{font-size:12.5px;color:var(--sub);margin-top:4px;line-height:1.6;}
+  /* Question */
+  .qbox{background:var(--card);border-radius:16px;padding:22px;margin-bottom:14px;border:1px solid rgba(255,255,255,.06);scroll-margin-top:180px;}
+  .qbox.active{border-color:rgba(0,212,255,.25);}
+  .qmeta{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap;}
+  .qnum{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1px;}
+  .qtag{font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:20px;}
+  .qlv{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;}
+  .qtext{font-size:15px;font-weight:600;line-height:1.65;margin-bottom:16px;white-space:pre-wrap;}
+  .opts{display:flex;flex-direction:column;gap:8px;}
+  .opt{display:flex;gap:10px;align-items:flex-start;padding:12px 15px;border-radius:10px;border:1px solid rgba(255,255,255,.08);cursor:pointer;font-size:13.5px;line-height:1.55;background:transparent;color:var(--text);font-family:inherit;text-align:left;transition:all .2s;white-space:pre-wrap;}
+  .opt:hover:not(:disabled){border-color:rgba(0,212,255,.35);background:rgba(0,212,255,.06);}
+  .opt.selected{border-color:#00d4ff;background:rgba(0,212,255,.08);color:#00d4ff;}
+  .opt.correct{border-color:var(--ok);background:rgba(16,185,129,.12);color:#6ee7b7;}
+  .opt.wrong-sel{border-color:var(--no);background:rgba(239,68,68,.12);color:#fca5a5;}
+  .opt.show-correct{border-color:var(--ok);background:rgba(16,185,129,.08);}
+  .opt:disabled{cursor:default;}
+  .okey{font-weight:800;font-size:12.5px;min-width:20px;flex-shrink:0;}
+  /* Phần II */
+  .ds-context{font-size:13px;line-height:1.85;color:#c7d2fe;background:rgba(0,0,0,.35);border-radius:10px;padding:14px 16px;margin-bottom:14px;white-space:pre-wrap;}
+  .ds-item{background:rgba(255,255,255,.035);border-radius:10px;padding:14px 15px;margin-bottom:10px;border:1px solid rgba(255,255,255,.07);}
+  .di-label{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--sub);margin-bottom:6px;}
+  .di-q{font-size:13.5px;line-height:1.65;margin-bottom:10px;}
+  .di-btns{display:flex;gap:8px;}
+  .di-btn{flex:1;padding:9px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:transparent;color:var(--sub);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;}
+  .di-btn:hover:not(:disabled){border-color:rgba(255,255,255,.25);color:var(--text);}
+  .di-btn.selected-t{border-color:#00d4ff;background:rgba(0,212,255,.1);color:#00d4ff;}
+  .di-btn.selected-f{border-color:#a78bfa;background:rgba(124,58,237,.1);color:#a78bfa;}
+  .di-btn.correct{border-color:var(--ok)!important;background:rgba(16,185,129,.15)!important;color:#6ee7b7!important;}
+  .di-btn.wrong-btn{border-color:var(--no)!important;background:rgba(239,68,68,.15)!important;color:#fca5a5!important;}
+  .di-btn:disabled{cursor:default;}
+  .di-exp{margin-top:10px;font-size:12.5px;color:#a7f3d0;line-height:1.7;display:none;padding-left:8px;border-left:2px solid var(--ok);}
+  .di-exp.show{display:block;}
+  /* Result overlay */
+  .result-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);z-index:200;display:none;align-items:center;justify-content:center;}
+  .result-overlay.show{display:flex;}
+  .result-card{background:#0f172a;border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:44px 40px;max-width:520px;width:90%;text-align:center;}
+  .rc-title{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:4px;color:var(--sub);margin-bottom:16px;}
+  .rc-score{font-family:'Bebas Neue',sans-serif;font-size:80px;letter-spacing:2px;line-height:1;}
+  .rc-detail{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0;text-align:left;}
+  .rc-item{background:rgba(255,255,255,.04);border-radius:10px;padding:12px 14px;}
+  .rc-item-label{font-size:11px;color:var(--sub);margin-bottom:4px;}
+  .rc-item-val{font-size:16px;font-weight:700;}
+  .rc-grade{font-size:22px;font-weight:800;margin:10px 0 4px;}
+  .rc-msg{font-size:13px;color:var(--sub);}
+  .rc-btns{display:flex;gap:10px;margin-top:24px;justify-content:center;}
+  .rc-btn{padding:11px 28px;border-radius:11px;border:none;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:transform .2s;}
+  .rc-btn:hover{transform:scale(1.04);}
+  .rc-btn-review{background:rgba(255,255,255,.08);color:var(--text);}
+  .rc-btn-redo{background:linear-gradient(135deg,#10b981,#00d4ff);color:#000;}
+  /* level badges */
+  .lb{background:rgba(16,185,129,.15);color:#10b981;}
+  .lh{background:rgba(245,158,11,.15);color:#fcd34d;}
+  .lv{background:rgba(239,68,68,.15);color:#f87171;}
+  /* explanation (shown after submit) */
+  .exp-box{margin-top:12px;padding:12px 14px;background:rgba(0,0,0,.35);border-left:3px solid var(--ok);border-radius:0 8px 8px 0;font-size:12.5px;line-height:1.8;color:#a7f3d0;display:none;white-space:pre-wrap;}
+  .exp-box.show{display:block;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html" class="back">← Trang chủ</a>
+  <div class="title">ĐỀ THI MÔ PHỎNG · CỤM 308 · 2025–2026</div>
+  <span style="font-size:12px;color:var(--sub)">Mô phỏng cấu trúc đề thi thật</span>
+</div>
+
+<!-- Timer bar -->
+<div class="timer-bar">
+  <div>
+    <div class="timer-display" id="timerDisplay">50:00</div>
+    <div class="timer-meta">Thời gian còn lại</div>
+  </div>
+  <div class="progress-full">
+    <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
+      <span style="font-size:11px;color:var(--sub)">Tiến độ</span>
+      <span style="font-size:11px;color:var(--sub)" id="progText">0 / 40 câu</span>
+    </div>
+    <div class="pbar-full"><div class="pbar-fill" id="progFill" style="width:0%"></div></div>
+  </div>
+  <div>
+    <div class="score-live" id="scoreLive">–</div>
+    <div class="timer-meta">Điểm tạm tính</div>
+  </div>
+</div>
+
+<div class="ctrl-bar">
+  <button class="btn btn-start" id="btnStart" onclick="startExam()">▶ Bắt đầu làm bài</button>
+  <button class="btn btn-submit" id="btnSubmit" onclick="submitExam()" disabled>📤 Nộp bài & Chấm điểm</button>
+  <button class="btn btn-reset" onclick="resetExam()">🔄 Làm lại</button>
+  <span class="exam-info">📋 40 câu · 50 phút · Phần I (24 câu) + Phần II (4 câu × 4 ý)</span>
+</div>
+
+<!-- Answer navigation -->
+<div class="nav-grid-wrap">
+  <div class="nav-grid-title">Điều hướng câu hỏi</div>
+  <div class="nav-grid" id="navGrid"></div>
+</div>
+
+<div class="content" id="examContent">
+  <!-- Rendered by JS -->
+</div>
+
+<!-- Result overlay -->
+<div class="result-overlay" id="resultOverlay">
+  <div class="result-card">
+    <div class="rc-title">KẾT QUẢ BÀI THI</div>
+    <div class="rc-score" id="rcScore"></div>
+    <div class="rc-detail">
+      <div class="rc-item"><div class="rc-item-label">Phần I (24 câu)</div><div class="rc-item-val" id="rcp1"></div></div>
+      <div class="rc-item"><div class="rc-item-label">Phần II (4×4 ý)</div><div class="rc-item-val" id="rcp2"></div></div>
+      <div class="rc-item"><div class="rc-item-label">Tỉ lệ đúng</div><div class="rc-item-val" id="rcPct"></div></div>
+      <div class="rc-item"><div class="rc-item-label">Thời gian</div><div class="rc-item-val" id="rcTime"></div></div>
+    </div>
+    <div class="rc-grade" id="rcGrade"></div>
+    <div class="rc-msg" id="rcMsg"></div>
+    <div class="rc-btns">
+      <button class="rc-btn rc-btn-review" onclick="closeResult()">🔍 Xem đáp án</button>
+      <button class="rc-btn rc-btn-redo" onclick="resetExam()">🔄 Thi lại</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const CATCOL={1:'#ff6b35',2:'#38bdf8',3:'#a78bfa',4:'#34d399',5:'#fcd34d',6:'#f472b6',7:'#67e8f9'};
+const CATNAME={1:'🤖 12A',2:'🌐 12B',3:'🌐 12F',4:'💻 10F',5:'⚖️ 12D',6:'🎯 12G',7:'🗄️ 11F'};
+
+// PHẦN I – 24 câu trắc nghiệm
+const P1=[
+  {cat:1,lv:'B',q:'Trí tuệ nhân tạo (AI) có khả năng nào dưới đây?',
+   opts:['Chỉ thực hiện các phép tính số học','Thực hiện những công việc mang tính trí tuệ của con người như nhận dạng, dịch thuật, học','Chỉ lưu trữ và truy xuất dữ liệu','Chỉ điều khiển các thiết bị phần cứng'],
+   ans:1,exp:'AI là khả năng của máy tính thực hiện những công việc mang tính trí tuệ của con người: đọc chữ, hiểu tiếng nói, dịch thuật, lái xe, học và ra quyết định.'},
+  {cat:1,lv:'B',q:'Hệ thống nào dưới đây là ví dụ điển hình của ứng dụng Trí tuệ nhân tạo (AI)?',
+   opts:['Phần mềm máy tính bỏ túi thực hiện phép tính','Hệ thống nhận dạng giọng nói và trả lời câu hỏi tự động (trợ lý ảo Siri, Alexa)','Đèn tín hiệu giao thông bật/tắt theo lịch cố định','Máy in tự động in tài liệu khi nhận lệnh'],
+   ans:1,exp:'Trợ lý ảo như Siri, Alexa, Google Assistant là ứng dụng AI điển hình: có khả năng HIỂU giọng nói, SUY LUẬN và TRẢ LỜI thông minh – đây là công việc mang tính trí tuệ của con người.\nCác đáp án còn lại chỉ là tự động hóa cơ học, không có "học" hay "suy luận".'},
+  {cat:1,lv:'H',q:'AI được ứng dụng trong lĩnh vực y tế để làm gì?',
+   opts:['Thay thế hoàn toàn bác sĩ','Hỗ trợ chẩn đoán qua phân tích hình ảnh X-quang, MRI và dự đoán bệnh','Sản xuất thuốc hóa học','Chỉ dùng để quản lý hồ sơ bệnh nhân'],
+   ans:1,exp:'AI trong y tế: phân tích hình ảnh X-quang/MRI để phát hiện ung thư, hỗ trợ chẩn đoán, robot phẫu thuật, dự đoán nguy cơ bệnh. AI hỗ trợ bác sĩ, không thay thế.'},
+  {cat:1,lv:'H',q:'Đặc điểm của AI hẹp (ANI – Artificial Narrow Intelligence) là gì?',
+   opts:['Có thể làm mọi việc thông minh hơn con người','Chỉ làm tốt một nhiệm vụ cụ thể được lập trình','Có ý thức và cảm xúc như con người','Đã tồn tại từ thế kỷ 19'],
+   ans:1,exp:'AI hẹp (ANI): chỉ làm tốt MỘT nhiệm vụ cụ thể. VD: AlphaGo chỉ chơi cờ vây. Hiện nay TẤT CẢ AI đang hoạt động đều là ANI. AI rộng (AGI) chưa tồn tại.'},
+  {cat:2,lv:'B',q:'Thiết bị nào sau đây kết nối các mạng khác nhau và định tuyến gói tin dựa trên địa chỉ IP?',
+   opts:['Hub','Switch','Router','Repeater'],
+   ans:2,exp:'Router (bộ định tuyến): kết nối các mạng khác nhau (LAN với Internet) và chọn đường đi tối ưu cho gói tin dựa trên địa chỉ IP đích.'},
+  {cat:2,lv:'B',q:'Giao thức HTTPS khác HTTP ở điểm nào?',
+   opts:['Nhanh hơn HTTP','Có mã hóa SSL/TLS bảo vệ dữ liệu truyền','Chỉ dùng cho email','Không cần kết nối Internet'],
+   ans:1,exp:'HTTPS = HTTP + SSL/TLS: mã hóa dữ liệu giữa trình duyệt và máy chủ. Quan trọng khi nhập mật khẩu, thông tin thẻ ngân hàng. Nhận biết bằng ổ khóa 🔒 trên trình duyệt.'},
+  {cat:2,lv:'B',q:'DNS (Domain Name System) có chức năng gì?',
+   opts:['Phân phối địa chỉ IP tự động cho thiết bị','Chuyển đổi tên miền thành địa chỉ IP','Mã hóa dữ liệu trên mạng','Kết nối các mạng khác loại'],
+   ans:1,exp:'DNS = "danh bạ Internet": chuyển tên miền dễ nhớ (google.com) → địa chỉ IP (142.250.190.14) để máy tính kết nối. Không có DNS, phải nhớ địa chỉ IP số thay vì tên miền.'},
+  {cat:2,lv:'H',q:'Phân biệt IP tĩnh và IP động:',
+   opts:['IP tĩnh do DHCP cấp, thay đổi mỗi lần kết nối','IP tĩnh được cấu hình cố định thủ công, IP động do DHCP cấp tự động và có thể thay đổi','Hai loại hoàn toàn giống nhau','IP động là IP được mã hóa'],
+   ans:1,exp:'IP tĩnh (Static): cấu hình thủ công, không thay đổi → dùng cho máy chủ, printer.\nIP động (Dynamic): DHCP server cấp tự động khi kết nối, có thể thay đổi → dùng cho PC thông thường, laptop, điện thoại.'},
+  {cat:2,lv:'V',q:'Khi truy cập website https://truong.edu.vn, quá trình nào xảy ra ĐẦU TIÊN?',
+   opts:['Máy tính tải ngay nội dung trang web','DNS phân giải tên miền "truong.edu.vn" thành địa chỉ IP của máy chủ','Router kiểm tra quyền truy cập','Trình duyệt mã hóa dữ liệu'],
+   ans:1,exp:'Khi gõ URL, quá trình:\n1. DNS phân giải tên miền → địa chỉ IP máy chủ\n2. Trình duyệt kết nối TCP đến IP đó\n3. Bắt tay SSL/TLS (HTTPS)\n4. Gửi HTTP request\n5. Nhận HTML và hiển thị trang'},
+  {cat:3,lv:'B',q:'Thẻ HTML nào dùng để tạo danh sách CÓ đánh số thứ tự?',
+   opts:['<ul>','<ol>','<dl>','<list>'],
+   ans:1,exp:'<ol> (Ordered List): danh sách CÓ số thứ tự (1, 2, 3...)\n<ul> (Unordered List): danh sách KHÔNG có số thứ tự (dấu chấm đầu dòng)\nCả hai đều dùng <li> cho mỗi mục.\nVí dụ: <ol><li>Mục 1</li><li>Mục 2</li></ol>'},
+  {cat:3,lv:'B',q:'Thuộc tính "colspan" trong thẻ <td> của bảng HTML dùng để:',
+   opts:['Thay đổi màu nền ô','Gộp nhiều ô theo chiều NGANG (theo cột)','Gộp nhiều ô theo chiều DỌC (theo hàng)','Thay đổi độ rộng viền'],
+   ans:1,exp:'colspan="n": gộp n ô theo chiều NGANG (ngang = cột = column)\nrowspan="n": gộp n ô theo chiều DỌC (dọc = hàng = row)\nVí dụ: <td colspan="3"> gộp 3 ô ngang, ô đó chiếm 3 cột.'},
+  {cat:3,lv:'H',q:'Để áp dụng màu xanh cho TẤT CẢ đoạn văn <p> trên trang, CSS selector nào là ĐÚNG?',
+   opts:['#p { color: blue; }','.p { color: blue; }','p { color: blue; }','p.all { color: blue; }'],
+   ans:2,exp:'Để áp dụng cho TẤT CẢ thẻ <p>:\n\np { color: blue; }  ← Tag selector (ĐÚNG)\n\nLý do các đáp án khác sai:\n• #p: ID selector – áp dụng cho MỘT phần tử id="p" (ID duy nhất)\n• .p: Class selector – áp dụng cho class="p" (phải thêm class vào từng <p>)\n• p.all: Tag kết hợp class – chỉ <p> có class="all" mới được áp dụng\n\nMẹo: tag selector (p) = TẤT CẢ thẻ p, không cần ký hiệu đặc biệt'},
+  {cat:3,lv:'V',q:'Đoạn code HTML:\n<table border="1">\n  <tr><th colspan="2">Danh sách HS</th></tr>\n  <tr><td>An</td><td>90</td></tr>\n</table>\n\nBảng này có bao nhiêu cột (trong hàng đầu tiên)?',
+   opts:['1 cột','2 cột','3 cột','4 cột'],
+   ans:1,exp:'Phân tích:\n• <th colspan="2">Danh sách HS</th>: ô tiêu đề GỘP 2 CỘT (colspan="2")\n→ Hàng đầu tiên chiếm 2 cột\n\n• Hàng thứ 2: <td>An</td><td>90</td> = 2 ô riêng biệt = 2 cột\n\nVậy bảng này có tổng 2 cột, nhưng hàng đầu gộp thành 1 ô.\nCâu hỏi hỏi "có bao nhiêu cột (trong hàng đầu tiên)" = colspan làm cho 1 ô thể hiện 2 cột, nhưng vẫn là 2 cột'},
+  {cat:4,lv:'B',q:'Trong Python, để nhận dữ liệu nhập từ bàn phím, ta dùng hàm nào?',
+   opts:['print()','scan()','read()','input()'],
+   ans:3,exp:'input() trong Python: đọc chuỗi từ bàn phím và trả về kiểu str.\nVí dụ: ten = input("Nhập tên: ")\nNếu cần số: so = int(input("Nhập số: "))\nprint() là hàm xuất (in ra màn hình).'},
+  {cat:4,lv:'B',q:'Vòng lặp "for i in range(0, 10, 2):" trong Python lặp với i nhận giá trị nào?',
+   opts:['0, 2, 4, 6, 8, 10','0, 2, 4, 6, 8','1, 3, 5, 7, 9','2, 4, 6, 8, 10'],
+   ans:1,exp:'range(start, stop, step): bắt đầu=0, dừng trước 10, bước nhảy=2\ni = 0, 2, 4, 6, 8 (không bao gồm 10)\nĐây là cách lấy các số CHẴN từ 0 đến 8.\nMẹo: "dừng trước stop, nhảy theo step"'},
+  {cat:4,lv:'H',q:'Đoạn code Python sau in ra kết quả gì?\nx = 10\nif x > 5:\n    if x > 8:\n        print("A")\n    else:\n        print("B")\nelse:\n    print("C")',
+   opts:['A','B','C','Lỗi cú pháp'],
+   ans:0,exp:'Phân tích if lồng nhau:\n• x=10 > 5 → vào nhánh if ngoài\n• x=10 > 8 → vào nhánh if trong\n→ print("A")\nKết quả: A\nLưu ý: Python dùng thụt lề (indent 4 dấu cách) để xác định khối lệnh.'},
+  {cat:4,lv:'H',q:'Hàm Python nào dưới đây đúng cú pháp và trả về tổng hai số?',
+   opts:['function tong(a, b): return a+b','def tong(a, b): return a+b','def tong(a, b) { return a+b; }','tong = function(a, b): a+b'],
+   ans:1,exp:'Cú pháp đúng trong Python:\ndef ten_ham(tham_so):\n    return ket_qua\n\nQuy tắc:\n• Dùng từ khóa "def" (không phải "function")\n• Không dùng dấu ngoặc nhọn {}\n• Thụt lề thân hàm\n• "return" trả về giá trị'},
+  {cat:4,lv:'V',q:'Đọc code Python:\ndef xu_ly(ds):\n    kq = []\n    for x in ds:\n        if x % 2 != 0:\n            kq.append(x)\n    return kq\nprint(xu_ly([1,2,3,4,5,6]))',
+   opts:['[2, 4, 6]','[1, 3, 5]','[1, 2, 3, 4, 5, 6]','[]'],
+   ans:1,exp:'Phân tích:\n• Hàm xu_ly lọc phần tử từ danh sách\n• x % 2 != 0: lấy số LẺ (chia 2 không hết)\n• append(): thêm vào danh sách kq\n• Input: [1,2,3,4,5,6]\n• Số lẻ: 1, 3, 5\nKết quả: [1, 3, 5]'},
+  {cat:5,lv:'B',q:'Hành vi nào sau đây là vi phạm đạo đức trong môi trường số?',
+   opts:['Đăng bài viết của mình lên blog cá nhân','Chia sẻ bài thơ của người khác mà không ghi tên tác giả','Dùng mật khẩu mạnh cho tài khoản','Cài phần mềm có bản quyền hợp lệ'],
+   ans:1,exp:'Chia sẻ tác phẩm của người khác mà không ghi tên tác giả/nguồn là vi phạm:\n1. Quyền tác giả (Copyright)\n2. Đạo đức trong môi trường số\nCần ghi rõ: tên tác giả, nguồn, đường link khi sử dụng nội dung người khác.'},
+  {cat:5,lv:'B',q:'Phần mềm nào dưới đây là phần mềm mã nguồn mở (Open Source)?',
+   opts:['Microsoft Windows 11','Adobe Photoshop CC','LibreOffice','Microsoft Office 365'],
+   ans:2,exp:'LibreOffice là phần mềm văn phòng mã nguồn mở, miễn phí hoàn toàn.\nCác PM mã nguồn mở nổi tiếng: Linux, Firefox, VLC, Python, LibreOffice.\nMicrosoft Windows, Office, Adobe Photoshop đều là phần mềm bản quyền thương mại.'},
+  {cat:5,lv:'H',q:'Cyberbullying (bắt nạt trực tuyến) là gì?',
+   opts:['Lỗi kỹ thuật của mạng Internet','Hành vi quấy rối, đe dọa, xúc phạm người khác qua Internet và mạng xã hội','Phần mềm bảo vệ trẻ em trực tuyến','Tên một loại virus máy tính'],
+   ans:1,exp:'Cyberbullying: sử dụng công nghệ số để quấy rối, đe dọa, phát tán thông tin xấu về người khác.\nHình thức: bình luận ác ý, gửi tin nhắn đe dọa, phát tán ảnh/video riêng tư...\nHậu quả: tổn thương tâm lý nặng nề, đặc biệt với học sinh.'},
+  {cat:5,lv:'V',q:'Học sinh B nhận được email từ "ngân hàng" yêu cầu nhập mật khẩu gấp kẻo khóa tài khoản. Đây là dấu hiệu của tấn công nào?',
+   opts:['Virus máy tính','Tấn công từ chối dịch vụ (DDoS)','Phishing (giả mạo lừa đảo)','Ransomware'],
+   ans:2,exp:'Đây là dấu hiệu điển hình của Phishing:\n• Email giả mạo ngân hàng/tổ chức uy tín\n• Tạo cảm giác khẩn cấp ("gấp", "kẻo khóa")\n• Yêu cầu nhập thông tin nhạy cảm\nCách phòng: không click link trong email, truy cập trực tiếp website ngân hàng, bật 2FA.'},
+  {cat:6,lv:'B',q:'Chuyên gia "An ninh mạng" (Cybersecurity) có nhiệm vụ chính là gì?',
+   opts:['Thiết kế giao diện ứng dụng đẹp','Bảo vệ hệ thống thông tin khỏi các cuộc tấn công, xâm nhập trái phép','Quản lý dữ liệu trong cơ sở dữ liệu','Viết tài liệu hướng dẫn sử dụng phần mềm'],
+   ans:1,exp:'Chuyên gia An ninh mạng:\n• Phát hiện và vá lỗ hổng bảo mật\n• Giám sát và ứng phó sự cố tấn công\n• Kiểm tra thâm nhập (Pentest)\n• Xây dựng chính sách bảo mật\nNhu cầu tuyển dụng rất cao, lương cao trong thị trường IT.'},
+  {cat:6,lv:'H',q:'Nhóm nghề "Dịch vụ và Quản trị" trong lĩnh vực CNTT bao gồm công việc nào?',
+   opts:['Chỉ lập trình viên và kỹ sư phần mềm','Quản trị hệ thống, quản trị mạng, quản trị CSDL, hỗ trợ kỹ thuật','Chỉ thiết kế đồ họa và UI/UX','Chỉ nghiên cứu khoa học máy tính'],
+   ans:1,exp:'Nhóm Dịch vụ & Quản trị CNTT gồm:\n• Quản trị hệ thống (SysAdmin)\n• Quản trị mạng (Network Admin)\n• Quản trị CSDL (DBA)\n• Hỗ trợ kỹ thuật (IT Helpdesk)\n• Cloud/DevOps Administrator\nĐây là nhóm nghề trong chương trình 12G của SGK.'},
+];
+
+// PHẦN II – 4 câu đúng/sai
+const P2=[
+  {id:25,title:'Câu 25 · Phần II Chung · 12B Mạng máy tính',
+   context:'Trường THPT A lắp đặt hệ thống mạng nội bộ kết nối 30 máy tính. Mạng dùng Switch trung tâm, Router kết nối Internet qua nhà cung cấp dịch vụ. Địa chỉ IP nội bộ dùng dải 192.168.10.x.',
+   items:[
+     {k:'a',q:'Switch trong mạng trường học giúp gửi gói tin đúng đến máy đích dựa vào địa chỉ MAC, hiệu quả hơn Hub.',cor:true,exp:'ĐÚNG. Switch lưu bảng MAC address, gửi gói tin đúng cổng đích → tiết kiệm băng thông, bảo mật hơn Hub (Hub phát đến TẤT CẢ cổng).'},
+     {k:'b',q:'Địa chỉ IP 192.168.10.5 là địa chỉ IP công cộng, có thể ping được từ mọi máy tính trên Internet.',cor:false,exp:'SAI. 192.168.x.x là IP riêng (Private), chỉ dùng trong mạng nội bộ. Không thể truy cập từ Internet trực tiếp. Cần NAT để ra Internet.'},
+     {k:'c',q:'Khi máy tính gõ địa chỉ "google.com", DNS server sẽ tra cứu và trả về địa chỉ IP tương ứng.',cor:true,exp:'ĐÚNG. Đây chính xác là chức năng của DNS (Domain Name System): phân giải tên miền → địa chỉ IP để máy tính kết nối được.'},
+     {k:'d',q:'Để máy tính trong mạng chia sẻ được thư mục, chỉ cần hai máy cùng kết nối vào mạng là đủ.',cor:false,exp:'SAI. Phải cấu hình chia sẻ thủ công: Chuột phải thư mục → Properties → Sharing → Advanced Sharing → Share this folder → phân quyền. Chỉ kết nối mạng chưa đủ.'},
+   ]},
+  {id:26,title:'Câu 26 · Phần II Chung · 11F Cơ sở dữ liệu',
+   context:'Bảng SACH trong CSDL thư viện trường gồm: MaSach (PK), TenSach, TacGia, NamXB, SoLuong, GiaThue. Viết các câu SQL để trả lời yêu cầu quản lý.',
+   items:[
+     {k:'a',q:'Câu lệnh "SELECT * FROM SACH WHERE NamXB >= 2020;" lấy thông tin tất cả sách xuất bản từ năm 2020 trở đi.',cor:true,exp:'ĐÚNG. SELECT *: lấy tất cả cột. WHERE NamXB >= 2020: lọc sách xuất bản năm 2020 hoặc sau đó.'},
+     {k:'b',q:'Hàm MAX(GiaThue) trả về giá thuê trung bình của tất cả sách trong bảng.',cor:false,exp:'SAI. MAX(GiaThue) trả về giá thuê CAO NHẤT.\nGiá thuê trung bình phải dùng: AVG(GiaThue)\nNhớ: MAX→lớn nhất, MIN→nhỏ nhất, AVG→trung bình, SUM→tổng, COUNT→đếm'},
+     {k:'c',q:'"SELECT TenSach FROM SACH WHERE TacGia LIKE \'Nguyễn%\';" tìm tên sách của các tác giả họ Nguyễn.',cor:true,exp:'ĐÚNG. LIKE với % là ký tự đại diện:\n"Nguyễn%" tìm chuỗi BẮT ĐẦU bằng "Nguyễn" → các tác giả có họ Nguyễn.'},
+     {k:'d',q:'"SELECT * FROM SACH ORDER BY GiaThue ASC;" sắp xếp sách từ giá thuê CAO nhất đến THẤP nhất.',cor:false,exp:'SAI. ASC = Ascending = tăng dần = từ thấp đến cao.\nDESC = Descending = giảm dần = từ cao đến thấp.\nĐể sắp xếp từ cao đến thấp: ORDER BY GiaThue DESC'},
+   ]},
+  {id:27,title:'Câu 27 · Phần II ICT · 12F Tạo trang Web HTML/CSS',
+   context:'Học sinh đang tạo trang web giới thiệu lớp học với HTML và CSS. Trang cần có tiêu đề, bảng danh sách học sinh, hình ảnh và định dạng CSS.',
+   items:[
+     {k:'a',q:'Để tạo ô tiêu đề bảng in đậm và căn giữa, dùng thẻ <th> thay vì <td>.',cor:true,exp:'ĐÚNG. <th> (table header): tự động in đậm và căn giữa, dùng cho tiêu đề cột/hàng. <td> (table data): ô dữ liệu thông thường, không in đậm.'},
+     {k:'b',q:'Để liên kết đến trang ngoài mở trong tab mới, viết: <a href="url" target="_blank">',cor:true,exp:'ĐÚNG. target="_blank": mở liên kết trong TAB MỚI.\nCác giá trị target khác:\n• _self (mặc định): mở trong tab hiện tại\n• _parent: mở trong frame cha\n• _top: mở trong toàn cửa sổ'},
+     {k:'c',q:'CSS inline (style trực tiếp trong thẻ) có độ ưu tiên THẤP HƠN so với CSS trong file .css ngoài.',cor:false,exp:'SAI. Thứ tự ưu tiên CSS (cao → thấp):\n1. Inline style (style="" trong thẻ) – CAO NHẤT\n2. Internal (<style> trong <head>)\n3. External (file .css ngoài) – THẤP NHẤT\nInline luôn ghi đè các style khác.'},
+     {k:'d',q:'Thuộc tính CSS "padding: 10px;" tạo khoảng cách 10px BÊN TRONG viền của phần tử.',cor:true,exp:'ĐÚNG. padding: khoảng cách bên TRONG (giữa nội dung và viền).\nmargin: khoảng cách bên NGOÀI (giữa phần tử và các phần tử khác).\nMẹo nhớ: "Padding = Bọc bên trong như đệm áo"'},
+   ]},
+  {id:28,title:'Câu 28 · Phần II ICT · 11F Thực hành CSDL SQL',
+   context:'CSDL quản lý điểm học sinh: Bảng DIEM(MaHS, HoTen, Lop, DiemToan, DiemVan, DiemAnh, DiemTB). Cần viết SQL để thống kê và khai thác.',
+   items:[
+     {k:'a',q:'"SELECT HoTen, DiemTB FROM DIEM WHERE Lop=\'12A1\' ORDER BY DiemTB DESC;" lấy danh sách học sinh lớp 12A1 sắp xếp theo điểm TB từ cao đến thấp.',cor:true,exp:'ĐÚNG. Phân tích đầy đủ:\n• SELECT HoTen, DiemTB: lấy 2 cột\n• WHERE Lop="12A1": chỉ lớp 12A1\n• ORDER BY DiemTB DESC: sắp từ cao→thấp (giảm dần)'},
+     {k:'b',q:'"SELECT COUNT(*) FROM DIEM WHERE DiemTB >= 8.0;" đếm số học sinh có điểm TB từ 8.0 trở lên (xếp loại Giỏi).',cor:true,exp:'ĐÚNG. COUNT(*) đếm số bản ghi. WHERE DiemTB >= 8.0 lọc HS giỏi.\nKết quả trả về: một số nguyên = tổng HS xếp loại Giỏi.'},
+     {k:'c',q:'"SELECT AVG(DiemToan) FROM DIEM;" tính điểm Toán của học sinh có điểm cao nhất.',cor:false,exp:'SAI. AVG() tính TRUNG BÌNH, không phải cao nhất.\nĐiểm Toán cao nhất: SELECT MAX(DiemToan) FROM DIEM;\nĐiểm Toán trung bình: SELECT AVG(DiemToan) FROM DIEM;'},
+     {k:'d',q:'"SELECT * FROM DIEM WHERE HoTen LIKE \'%Anh\';" tìm học sinh có tên KẾT THÚC bằng "Anh".',cor:true,exp:'ĐÚNG. Trong LIKE:\n• %Anh → KẾT THÚC bằng "Anh" (Minh Anh, Thu Anh...)\n• Anh% → BẮT ĐẦU bằng "Anh"\n• %Anh% → CHỨA "Anh" ở bất kỳ vị trí nào'},
+   ]},
+];
+
+// State
+let started=false, submitted=false, timeLeft=50*60, timerId=null;
+let p1Answers={}, p2Answers={}, startTime=null;
+
+// Build nav grid
+function buildNav(){
+  const g=document.getElementById('navGrid');
+  let html='<span style="font-size:11px;color:var(--sub);align-self:center;white-space:nowrap;margin-right:4px">Phần I:</span>';
+  P1.forEach((q,i)=>{
+    let cls='ncell'; if(p1Answers[i]!==undefined) cls+=' answered';
+    html+=`<div class="${cls}" id="nc-${i}" onclick="scrollToQ('p1-${i}')">${i+1}</div>`;
+  });
+  html+='<span style="font-size:11px;color:#ff6b35;align-self:center;white-space:nowrap;margin:0 4px">Phần II:</span>';
+  P2.forEach((c,i)=>{
+    let cls='ncell ds';
+    html+=`<div class="${cls}" id="nc-p2-${i}" onclick="scrollToQ('p2-${i}')">${25+i}</div>`;
+  });
+  g.innerHTML=html;
+}
+
+function scrollToQ(id){
+  const el=document.getElementById(id);
+  if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function updateNavCell(idx){
+  const c=document.getElementById(`nc-${idx}`);
+  if(!c) return;
+  c.classList.remove('answered','correct','wrong');
+  if(submitted){
+    c.classList.add(p1Answers[idx]===P1[idx].ans?'correct':'wrong');
+  } else if(p1Answers[idx]!==undefined){ c.classList.add('answered'); }
+}
+
+function updateProgress(){
+  const done=Object.keys(p1Answers).length;
+  const dsTotal=P2.reduce((s,c)=>s+Object.keys(p2Answers[c.id]||{}).length,0);
+  const total=done+dsTotal;
+  document.getElementById('progText').textContent=`${total} / 40 câu`;
+  document.getElementById('progFill').style.width=(total/40*100)+'%';
+}
+
+// Timer
+function startExam(){
+  if(started) return;
+  started=true;
+  startTime=Date.now();
+  document.getElementById('btnStart').disabled=true;
+  document.getElementById('btnSubmit').disabled=false;
+  timerId=setInterval(()=>{
+    timeLeft--;
+    const m=Math.floor(timeLeft/60), s=timeLeft%60;
+    const d=document.getElementById('timerDisplay');
+    d.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    d.className='timer-display'+(timeLeft<=300?' urgent':timeLeft<=600?' warn':'');
+    if(timeLeft<=0){ clearInterval(timerId); submitExam(); }
+  },1000);
+  renderExam();
+}
+
+function renderExam(){
+  let html='';
+  // Part I
+  html+=`<div class="sec-label">
+    <div class="sl-title">PHẦN I – TRẮC NGHIỆM CHỌN ĐÁP ÁN (24 câu – 6 điểm)</div>
+    <div class="sl-desc">Mỗi câu chọn đúng = 0.25 điểm · Câu 1–4: 12A AI · Câu 5–9: 12B Mạng · Câu 10–13: 12F Web · Câu 14–18: 10F Lập trình · Câu 19–22: 12D Đạo đức · Câu 23–24: 12G Hướng nghiệp</div>
+  </div>`;
+  const keys=['A','B','C','D'];
+  P1.forEach((q,i)=>{
+    const done=submitted, sel=p1Answers[i];
+    html+=`<div class="qbox" id="p1-${i}">
+      <div class="qmeta">
+        <span class="qnum" style="color:${CATCOL[q.cat]}">Câu ${i+1}</span>
+        <span class="qtag" style="background:${CATCOL[q.cat]}22;color:${CATCOL[q.cat]}">${CATNAME[q.cat]}</span>
+        <span class="qlv ${q.lv==='B'?'lb':q.lv==='H'?'lh':'lv'}">${q.lv==='B'?'Nhận biết':q.lv==='H'?'Thông hiểu':'Vận dụng'}</span>
+      </div>
+      <div class="qtext">${q.q}</div>
+      <div class="opts">
+        ${q.opts.map((o,j)=>{
+          let cls='opt';
+          if(done){ cls+=(j===q.ans?' correct':(j===sel?' wrong-sel':'')); }
+          else if(sel===j){ cls+=' selected'; }
+          return `<button class="${cls}" onclick="selAns(${i},${j})" ${done?'disabled':''}><span class="okey">${keys[j]}.</span>${o}</button>`;
+        }).join('')}
+      </div>
+      <div class="exp-box ${done?'show':''}" id="ep-${i}">✅ ${q.exp}</div>
+    </div>`;
+  });
+  // Part II
+  html+=`<div class="sec-label" style="border-color:rgba(255,107,53,.2)">
+    <div class="sl-title" style="color:#ff6b35">PHẦN II – TRẮC NGHIỆM ĐÚNG/SAI (4 câu – 4 điểm)</div>
+    <div class="sl-desc">Mỗi câu 4 ý · a,b đúng = 0.1đ/ý · c,d đúng = 0.25đ/ý · Trả lời đúng cả 4 ý = 1 điểm<br>Câu 25,26: Phần Chung (12B Mạng + 11F CSDL) · Câu 27,28: Phần riêng ICT (12F Web + 11F SQL)</div>
+  </div>`;
+  P2.forEach((cb,ci)=>{
+    html+=`<div class="qbox" id="p2-${ci}" style="border-color:rgba(255,107,53,.15)">
+      <div class="qmeta"><span class="qnum" style="color:#ff6b35">Câu ${cb.id}</span><span class="qtag" style="background:rgba(255,107,53,.15);color:#ff6b35">${cb.title.split('·')[1]?.trim()}</span></div>
+      <div class="ds-context">${cb.context}</div>
+      <div>${cb.items.map((it,ii)=>{
+        const pAns=(p2Answers[cb.id]||{})[it.k];
+        const done=submitted;
+        let tCls='di-btn', fCls='di-btn';
+        if(done){
+          tCls+=(it.cor===true?' correct':(pAns===true?' wrong-btn':''));
+          fCls+=(it.cor===false?' correct':(pAns===false?' wrong-btn':''));
+        } else {
+          if(pAns===true) tCls+=' selected-t';
+          if(pAns===false) fCls+=' selected-f';
+        }
+        return `<div class="ds-item">
+          <div class="di-label">Ý ${it.k} ${ii<2?'<span style="font-size:10px;color:#10b981">(0.1đ)</span>':'<span style="font-size:10px;color:#fcd34d">(0.25đ)</span>'}</div>
+          <div class="di-q">${it.q}</div>
+          <div class="di-btns">
+            <button class="${tCls}" onclick="selDS(${cb.id},'${it.k}',true)" ${done?'disabled':''}>✅ ĐÚNG</button>
+            <button class="${fCls}" onclick="selDS(${cb.id},'${it.k}',false)" ${done?'disabled':''}>❌ SAI</button>
+          </div>
+          <div class="di-exp ${done?'show':''}" id="de-${cb.id}-${it.k}">📖 ${it.exp}</div>
+        </div>`;
+      }).join('')}</div>
+    </div>`;
+  });
+  document.getElementById('examContent').innerHTML=html;
+}
+
+function selAns(qi, oi){
+  if(!started||submitted) return;
+  p1Answers[qi]=oi;
+  const keys=['A','B','C','D'];
+  const q=P1[qi];
+  const opts=document.getElementById(`p1-${qi}`).querySelectorAll('.opt');
+  opts.forEach((o,j)=>{ o.className='opt'+(j===oi?' selected':''); });
+  updateNavCell(qi); updateProgress(); updateScoreLive();
+}
+
+function selDS(cbId, key, val){
+  if(!started||submitted) return;
+  if(!p2Answers[cbId]) p2Answers[cbId]={};
+  p2Answers[cbId][key]=val;
+  // Update buttons
+  const cb=P2.find(c=>c.id===cbId);
+  const it=cb.items.find(i=>i.k===key);
+  const ci=P2.indexOf(cb), ii=cb.items.indexOf(it);
+  const btns=document.getElementById(`p2-${ci}`).querySelectorAll('.ds-item')[ii].querySelectorAll('.di-btn');
+  btns[0].className='di-btn'+(val===true?' selected-t':'');
+  btns[1].className='di-btn'+(val===false?' selected-f':'');
+  updateProgress(); updateScoreLive();
+}
+
+function updateScoreLive(){
+  let score=0;
+  P1.forEach((q,i)=>{ if(p1Answers[i]===q.ans) score+=0.25; });
+  P2.forEach(cb=>{
+    cb.items.forEach((it,ii)=>{
+      const v=(p2Answers[cb.id]||{})[it.k];
+      if(v===it.cor) score+=(ii<2?0.1:0.25);
+    });
+  });
+  document.getElementById('scoreLive').textContent=score.toFixed(2)+'đ';
+}
+
+function submitExam(){
+  if(!started) return;
+  clearInterval(timerId);
+  submitted=true;
+  document.getElementById('btnSubmit').disabled=true;
+  const elapsed=Math.round((Date.now()-startTime)/1000);
+  const em=Math.floor(elapsed/60), es=elapsed%60;
+
+  // Calculate scores
+  let p1Score=0, p2Score=0;
+  P1.forEach((q,i)=>{ if(p1Answers[i]===q.ans) p1Score+=0.25; });
+  P2.forEach(cb=>{
+    cb.items.forEach((it,ii)=>{
+      const v=(p2Answers[cb.id]||{})[it.k];
+      if(v===it.cor) p2Score+=(ii<2?0.1:0.25);
+    });
+  });
+  const total=(p1Score+p2Score).toFixed(2);
+  const pct=Math.round((p1Score+p2Score)/10*100);
+
+  // Show result
+  document.getElementById('rcScore').textContent=total+'/10';
+  document.getElementById('rcScore').style.color=total>=5?'#10b981':'#f59e0b';
+  document.getElementById('rcp1').textContent=p1Score.toFixed(2)+'/6';
+  document.getElementById('rcp2').textContent=p2Score.toFixed(2)+'/4';
+  document.getElementById('rcPct').textContent=pct+'%';
+  document.getElementById('rcTime').textContent=`${em}p ${es}s`;
+  document.getElementById('rcGrade').textContent=total>=8?'🏆 Đỗ loại Giỏi!':total>=6.5?'✅ Đỗ loại Khá!':total>=5?'✅ Đỗ!':'❌ Chưa đỗ';
+  document.getElementById('rcMsg').textContent=total>=8?'Xuất sắc! Tiếp tục giữ vững.':total>=6.5?'Tốt lắm! Ôn thêm một chút nữa.':total>=5?'Đỗ rồi nhưng cần ôn thêm để điểm cao hơn.':'Ôn thêm các chủ đề còn yếu và làm lại nhé!';
+  document.getElementById('resultOverlay').classList.add('show');
+
+  // Update nav & rerender
+  P1.forEach((_,i)=>updateNavCell(i));
+  renderExam();
+}
+
+function closeResult(){ document.getElementById('resultOverlay').classList.remove('show'); }
+
+function resetExam(){
+  clearInterval(timerId);
+  started=false; submitted=false; timeLeft=50*60;
+  p1Answers={}; p2Answers={}; startTime=null;
+  document.getElementById('timerDisplay').textContent='50:00';
+  document.getElementById('timerDisplay').className='timer-display';
+  document.getElementById('btnStart').disabled=false;
+  document.getElementById('btnSubmit').disabled=true;
+  document.getElementById('scoreLive').textContent='–';
+  document.getElementById('progText').textContent='0 / 40 câu';
+  document.getElementById('progFill').style.width='0%';
+  document.getElementById('resultOverlay').classList.remove('show');
+  document.getElementById('examContent').innerHTML=`
+    <div style="text-align:center;padding:80px 20px;color:var(--sub);">
+      <div style="font-size:48px;margin-bottom:20px">📋</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;margin-bottom:12px;color:var(--text)">SẴN SÀNG LÀM BÀI?</div>
+      <div style="font-size:14px;line-height:1.8;">40 câu hỏi · 50 phút · Cấu trúc đúng đề thi thật<br>Phần I: 24 câu chọn đáp án · Phần II: 4 câu đúng/sai<br><br>Nhấn <strong style="color:#00d4ff">▶ Bắt đầu làm bài</strong> để bắt đầu tính giờ</div>
+    </div>`;
+  buildNav();
+}
+
+buildNav();
+document.getElementById('examContent').innerHTML=`
+  <div style="text-align:center;padding:80px 20px;color:var(--sub);">
+    <div style="font-size:48px;margin-bottom:20px">📋</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;margin-bottom:12px;color:var(--text)">SẴN SÀNG LÀM BÀI?</div>
+    <div style="font-size:14px;line-height:1.8;">40 câu hỏi · 50 phút · Cấu trúc đúng đề thi thật<br>Phần I: 24 câu chọn đáp án · Phần II: 4 câu đúng/sai<br><br>Nhấn <strong style="color:#00d4ff">▶ Bắt đầu làm bài</strong> để bắt đầu tính giờ</div>
+  </div>`;
+</script>
+</body>
+</html>
