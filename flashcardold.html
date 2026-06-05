@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flashcard â€“ Tin Há»c THPT Cá»¥m 308</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{ --bg:#07090f; --card:#111827; --text:#e8eaf6; --sub:#8892b0; --a1:#00d4ff; --a2:#ff6b35; --a3:#7c3aed; --a4:#10b981; }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);font-family:'Be Vietnam Pro',sans-serif;color:var(--text);min-height:100vh;}
+  .top{display:flex;align-items:center;justify-content:space-between;padding:14px 22px;border-bottom:1px solid rgba(255,255,255,0.06);}
+  .back{color:var(--sub);text-decoration:none;font-size:13px;}
+  .back:hover{color:var(--text);}
+  .title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;background:linear-gradient(90deg,#ff6b35,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .prog-info{font-size:13px;color:var(--sub);}
+  .filters{display:flex;gap:7px;padding:14px 20px;flex-wrap:wrap;}
+  .fb{padding:5px 13px;border-radius:20px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--sub);font-size:11.5px;cursor:pointer;font-family:inherit;transition:all 0.2s;white-space:nowrap;}
+  .fb.on{color:#fff;}
+  .f0.on,.f0:hover{background:rgba(0,212,255,.12);border-color:#00d4ff;color:#00d4ff;}
+  .f1.on,.f1:hover{background:rgba(255,107,53,.12);border-color:#ff6b35;color:#ff6b35;}
+  .f2.on,.f2:hover{background:rgba(0,212,255,.12);border-color:#38bdf8;color:#38bdf8;}
+  .f3.on,.f3:hover{background:rgba(124,58,237,.12);border-color:#a78bfa;color:#a78bfa;}
+  .f4.on,.f4:hover{background:rgba(16,185,129,.12);border-color:#10b981;color:#10b981;}
+  .f5.on,.f5:hover{background:rgba(245,158,11,.12);border-color:#f59e0b;color:#fcd34d;}
+  .f6.on,.f6:hover{background:rgba(236,72,153,.12);border-color:#ec4899;color:#f472b6;}
+  .f7.on,.f7:hover{background:rgba(6,182,212,.12);border-color:#06b6d4;color:#67e8f9;}
+  .pbar{height:3px;background:rgba(255,255,255,0.07);margin:0 20px 2px;border-radius:2px;overflow:hidden;}
+  .pfill{height:100%;background:linear-gradient(90deg,#ff6b35,#7c3aed);border-radius:2px;transition:width .4s;}
+  .hint{text-align:center;color:var(--sub);font-size:12px;margin:7px 0 16px;}
+  .scene{perspective:1200px;max-width:620px;margin:0 auto;padding:0 18px;}
+  .card3d{width:100%;height:270px;position:relative;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.4,0,.2,1);cursor:pointer;}
+  .card3d.flipped{transform:rotateY(180deg);}
+  .face{position:absolute;inset:0;border-radius:20px;backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 32px;border:1px solid rgba(255,255,255,0.08);}
+  .front{background:var(--card);}
+  .bface{background:#0d1424;transform:rotateY(180deg);}
+  .flabel{font-size:10px;letter-spacing:2px;font-weight:700;text-transform:uppercase;margin-bottom:12px;opacity:0.45;}
+  .fq{font-size:17px;font-weight:700;text-align:center;line-height:1.55;}
+  .fa{font-size:14px;text-align:center;line-height:1.85;color:#c7d2fe;white-space:pre-wrap;}
+  .fcat{font-size:11px;font-weight:700;letter-spacing:.5px;margin-top:10px;padding:3px 12px;border-radius:20px;}
+  .flevel{font-size:10px;font-weight:600;letter-spacing:1px;padding:2px 8px;border-radius:10px;margin-top:6px;opacity:0.7;}
+  .controls{display:flex;gap:10px;justify-content:center;margin:14px 0 10px;}
+  .btn{padding:10px 22px;border-radius:10px;border:none;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;}
+  .bprev{background:rgba(255,255,255,0.07);color:var(--sub);}
+  .bprev:hover{background:rgba(255,255,255,0.12);color:var(--text);}
+  .bflip{background:var(--a2);color:#fff;}
+  .bflip:hover{transform:scale(1.04);opacity:.9;}
+  .bnext{background:rgba(255,255,255,0.07);color:var(--sub);}
+  .bnext:hover{background:rgba(255,255,255,0.12);color:var(--text);}
+  .bai{background:linear-gradient(135deg,#7c3aed,#00d4ff);color:#fff;width:calc(100% - 36px);max-width:580px;display:block;margin:0 auto 10px;border:none;border-radius:12px;padding:11px;font-family:inherit;font-size:13.5px;font-weight:700;cursor:pointer;transition:all .2s;}
+  .bai:hover{opacity:.9;transform:scale(1.01);}
+  .aibox{background:#0d1424;border:1px solid rgba(124,58,237,0.3);border-radius:14px;padding:16px 20px;margin:0 18px 16px;font-size:13px;line-height:1.85;color:#c7d2fe;display:none;}
+  .aibox.show{display:block;animation:fi .3s ease;}
+  .think{color:var(--sub);font-style:italic;}
+  @keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="top">
+  <a href="index.html" class="back">â† Trang chá»§</a>
+  <div class="title">FLASHCARD Ã”N Táº¬P Â· Cá»¤M 308</div>
+  <div class="prog-info"><span id="cur">1</span>/<span id="tot">1</span></div>
+</div>
+<div class="filters">
+  <button class="fb f0 on" onclick="sf(0,this)">Táº¥t cáº£</button>
+  <button class="fb f1" onclick="sf(1,this)">ðŸ¤– 12A Â· TrÃ­ tuá»‡ nhÃ¢n táº¡o</button>
+  <button class="fb f2" onclick="sf(2,this)">ðŸŒ 12B Â· Máº¡ng mÃ¡y tÃ­nh</button>
+  <button class="fb f3" onclick="sf(3,this)">ðŸŒ 12F Â· Táº¡o trang Web</button>
+  <button class="fb f4" onclick="sf(4,this)">ðŸ’» 10F Â· Láº­p trÃ¬nh Python</button>
+  <button class="fb f5" onclick="sf(5,this)">âš–ï¸ 12D Â· Äáº¡o Ä‘á»©c sá»‘</button>
+  <button class="fb f6" onclick="sf(6,this)">ðŸŽ¯ 12G Â· HÆ°á»›ng nghiá»‡p</button>
+  <button class="fb f7" onclick="sf(7,this)">ðŸ—„ï¸ 11F Â· CÆ¡ sá»Ÿ dá»¯ liá»‡u</button>
+</div>
+<div class="pbar"><div class="pfill" id="pf"></div></div>
+<p class="hint">ðŸ‘† Click tháº» Ä‘á»ƒ láº­t xem Ä‘Ã¡p Ã¡n Â· DÃ¹ng nÃºt Ä‘iá»u hÆ°á»›ng bÃªn dÆ°á»›i</p>
+<div class="scene">
+  <div class="card3d" id="c3d" onclick="flip()">
+    <div class="face front">
+      <div class="flabel">CÃ‚U Há»ŽI</div>
+      <div class="fq" id="fq"></div>
+      <div class="fcat" id="fcat"></div>
+      <div class="flevel" id="flv"></div>
+    </div>
+    <div class="face bface">
+      <div class="flabel" style="color:#7c3aed">ÄÃP ÃN</div>
+      <div class="fa" id="fa"></div>
+    </div>
+  </div>
+</div>
+<div class="controls">
+  <button class="btn bprev" onclick="prev()">â—€ TrÆ°á»›c</button>
+  <button class="btn bflip" onclick="flip()">ðŸ”„ Láº­t tháº»</button>
+  <button class="btn bnext" onclick="nxt()">Tiáº¿p â–¶</button>
+</div>
+<button class="bai" onclick="askAI()">âœ¨ AI giáº£i thÃ­ch sÃ¢u hÆ¡n (Claude)</button>
+<div class="aibox" id="aib"></div>
+
+<script>
+// cat=1 AI, 2=Máº¡ng, 3=Web, 4=Láº­p trÃ¬nh, 5=Äáº¡o Ä‘á»©c, 6=HÆ°á»›ng nghiá»‡p, 7=CSDL
+// lv: B=Biáº¿t, H=Hiá»ƒu, V=Váº­n dá»¥ng
+const CARDS=[
+  // 12A TrÃ­ tuá»‡ nhÃ¢n táº¡o
+  {cat:1,q:'TrÃ­ tuá»‡ nhÃ¢n táº¡o (AI) lÃ  gÃ¬?',a:'AI lÃ  kháº£ nÄƒng cá»§a mÃ¡y tÃ­nh thá»±c hiá»‡n nhá»¯ng cÃ´ng viá»‡c mang tÃ­nh trÃ­ tuá»‡ cá»§a con ngÆ°á»i nhÆ° Ä‘á»c chá»¯, hiá»ƒu tiáº¿ng nÃ³i, dá»‹ch thuáº­t, lÃ¡i xe, há»c vÃ  ra quyáº¿t Ä‘á»‹nh.',lv:'B'},
+  {cat:1,q:'Há»™i tháº£o Dartmouth (1956) cÃ³ Ã½ nghÄ©a gÃ¬ vá»›i AI?',a:'Há»™i tháº£o Dartmouth Ä‘Æ°á»£c tá»• chá»©c táº¡i Äáº¡i há»c Dartmouth, New Hampshire, Má»¹.\nÄÃ¢y lÃ  sá»± kiá»‡n Ä‘Ã¡nh dáº¥u sá»± ra Ä‘á»i cá»§a thuáº­t ngá»¯ AI vÃ  khá»Ÿi Ä‘áº§u lÄ©nh vá»±c TrÃ­ tuá»‡ nhÃ¢n táº¡o.',lv:'B'},
+  {cat:1,q:'Ká»ƒ 4 á»©ng dá»¥ng Ä‘iá»ƒn hÃ¬nh cá»§a TrÃ­ tuá»‡ nhÃ¢n táº¡o trong Ä‘á»i sá»‘ng.',a:'1. Google Dá»‹ch â€“ dá»‹ch thuáº­t ngÃ´n ngá»¯\n2. Nháº­n dáº¡ng khuÃ´n máº·t (Face ID)\n3. Xe tá»± lÃ¡i (Self-driving car)\n4. Trá»£ lÃ½ áº£o: Siri, Alexa, ChatGPT\n5. AI trong y táº¿: cháº©n Ä‘oÃ¡n hÃ¬nh áº£nh, robot pháº«u thuáº­t',lv:'H'},
+  {cat:1,q:'AI Ä‘Æ°á»£c á»©ng dá»¥ng nhÆ° tháº¿ nÃ o trong lÄ©nh vá»±c tÃ i chÃ­nh â€“ ngÃ¢n hÃ ng?',a:'AI trong tÃ i chÃ­nh â€“ ngÃ¢n hÃ ng:\nâ€¢ Tá»± Ä‘á»™ng hÃ³a cáº­p nháº­t chá»©ng tá»«, hÃ³a Ä‘Æ¡n\nâ€¢ PhÃ¢n tÃ­ch dá»¯ liá»‡u há»— trá»£ quyáº¿t Ä‘á»‹nh Ä‘áº§u tÆ°\nâ€¢ PhÃ¡t hiá»‡n vÃ  ngÄƒn cháº·n gian láº­n\nâ€¢ NÃ¢ng cao tráº£i nghiá»‡m khÃ¡ch hÃ ng (chatbot)',lv:'H'},
+  {cat:1,q:'NÃªu nhá»¯ng cáº£nh bÃ¡o vá» sá»± phÃ¡t triá»ƒn cá»§a AI trong tÆ°Æ¡ng lai.',a:'Cáº£nh bÃ¡o vá» AI:\nâ€¢ Máº¥t viá»‡c lÃ m do tá»± Ä‘á»™ng hÃ³a trÃ n lan\nâ€¢ Deepfake â€“ lÃ m giáº£ video/hÃ¬nh áº£nh gÃ¢y hiá»ƒu nháº§m\nâ€¢ AI bá»‹ sá»­ dá»¥ng sai má»¥c Ä‘Ã­ch (vÅ© khÃ­ hÃ³a)\nâ€¢ XÃ¢m pháº¡m quyá»n riÃªng tÆ° dá»¯ liá»‡u cÃ¡ nhÃ¢n\nâ€¢ AI háº¹p hiá»‡n táº¡i chÆ°a cÃ³ Ã½ thá»©c, tÆ° duy thá»±c sá»±',lv:'V'},
+  {cat:1,q:'PhÃ¢n biá»‡t AI háº¹p (ANI) vÃ  AI rá»™ng (AGI).',a:'AI háº¹p (ANI â€“ Narrow AI):\nâ€¢ Chá»‰ lÃ m tá»‘t Má»˜T nhiá»‡m vá»¥ cá»¥ thá»ƒ\nâ€¢ VD: AlphaGo chá»‰ chÆ¡i cá» vÃ¢y\nâ€¢ Hiá»‡n táº¡i táº¥t cáº£ AI Ä‘á»u lÃ  ANI\n\nAI rá»™ng (AGI â€“ General AI):\nâ€¢ CÃ³ thá»ƒ lÃ m NHIá»€U viá»‡c nhÆ° con ngÆ°á»i\nâ€¢ ChÆ°a tá»“n táº¡i, váº«n lÃ  má»¥c tiÃªu nghiÃªn cá»©u',lv:'H'},
+  // 12B Máº¡ng mÃ¡y tÃ­nh
+  {cat:2,q:'NÃªu chá»©c nÄƒng cá»§a Router (bá»™ Ä‘á»‹nh tuyáº¿n).',a:'Router káº¿t ná»‘i cÃ¡c máº¡ng khÃ¡c nhau vÃ  Ä‘á»‹nh tuyáº¿n gÃ³i dá»¯ liá»‡u Ä‘i Ä‘Ãºng Ä‘Æ°á»ng Ä‘áº¿n Ä‘Ã­ch.\n\nVÃ­ dá»¥: Router WiFi nhÃ  báº¡n káº¿t ná»‘i máº¡ng ná»™i bá»™ (LAN) vá»›i Internet (WAN).\nChá»n Ä‘Æ°á»ng Ä‘i tá»‘i Æ°u nháº¥t cho dá»¯ liá»‡u.',lv:'B'},
+  {cat:2,q:'PhÃ¢n biá»‡t Router, Switch vÃ  Hub.',a:'Hub: phÃ¢n phá»‘i tÃ­n hiá»‡u Ä‘áº¿n Táº¤T Cáº¢ cá»•ng, lÃ£ng phÃ­ bÄƒng thÃ´ng (cÅ©, Ã­t dÃ¹ng)\n\nSwitch: gá»­i dá»¯ liá»‡u Ä‘Ãºng cá»•ng Ä‘Ã­ch dá»±a vÃ o Ä‘á»‹a chá»‰ MAC â†’ thÃ´ng minh hÆ¡n hub\n\nRouter: káº¿t ná»‘i cÃ¡c máº¡ng khÃ¡c nhau, Ä‘á»‹nh tuyáº¿n gÃ³i tin dá»±a vÃ o Ä‘á»‹a chá»‰ IP',lv:'H'},
+  {cat:2,q:'Giao thá»©c TCP/IP gá»“m nhá»¯ng giao thá»©c nÃ o? NÃªu chá»©c nÄƒng.',a:'TCP/IP lÃ  bá»™ giao thá»©c chuáº©n cá»§a Internet:\nâ€¢ IP (Internet Protocol): Ä‘á»‹a chá»‰ vÃ  Ä‘á»‹nh tuyáº¿n gÃ³i tin\nâ€¢ TCP (Transmission Control): truyá»n tin cáº­y, kiá»ƒm lá»—i\nâ€¢ HTTP/HTTPS: truy cáº­p web\nâ€¢ DNS: chuyá»ƒn tÃªn miá»n â†’ Ä‘á»‹a chá»‰ IP\nâ€¢ FTP: truyá»n tá»‡p\nâ€¢ SMTP/POP3: gá»­i/nháº­n email',lv:'H'},
+  {cat:2,q:'Äá»‹a chá»‰ IP lÃ  gÃ¬? PhÃ¢n biá»‡t IPv4 vÃ  IPv6.',a:'Äá»‹a chá»‰ IP: Ä‘á»‹nh danh duy nháº¥t cho thiáº¿t bá»‹ trÃªn máº¡ng\n\nIPv4: 32 bit, dáº¡ng tháº­p phÃ¢n (VD: 192.168.1.1)\nâ†’ Khoáº£ng 4.3 tá»‰ Ä‘á»‹a chá»‰, Ä‘ang cáº¡n kiá»‡t\n\nIPv6: 128 bit, dáº¡ng tháº­p lá»¥c phÃ¢n\nâ†’ Cung cáº¥p sá»‘ lÆ°á»£ng Ä‘á»‹a chá»‰ gáº§n nhÆ° vÃ´ háº¡n',lv:'B'},
+  {cat:2,q:'DNS lÃ  gÃ¬? Táº¡i sao cáº§n DNS?',a:'DNS (Domain Name System): há»‡ thá»‘ng phÃ¢n giáº£i tÃªn miá»n\n\nChá»©c nÄƒng: chuyá»ƒn tÃªn miá»n dá»… nhá»› â†’ Ä‘á»‹a chá»‰ IP mÃ¡y tÃ­nh\nVD: "google.com" â†’ "142.250.190.14"\n\nCáº§n DNS vÃ¬: con ngÆ°á»i nhá»› tÃªn dá»… hÆ¡n nhá»› dÃ£y sá»‘ IP.',lv:'H'},
+  {cat:2,q:'Trong thá»±c hÃ nh chia sáº» tÃ i nguyÃªn máº¡ng, cáº§n thá»±c hiá»‡n cÃ¡c bÆ°á»›c nÃ o?',a:'CÃ¡c bÆ°á»›c chia sáº» thÆ° má»¥c trÃªn Windows:\n1. Chuá»™t pháº£i vÃ o thÆ° má»¥c â†’ Properties\n2. Tab Sharing â†’ Advanced Sharing\n3. TÃ­ch "Share this folder"\n4. Äáº·t tÃªn chia sáº», phÃ¢n quyá»n (Read/Write)\n5. Truy cáº­p tá»« mÃ¡y khÃ¡c: \\\\Ä‘á»‹a_chá»‰_IP\\tÃªn_chia_sáº»',lv:'V'},
+  // 12F Táº¡o trang Web
+  {cat:3,q:'NÃªu cáº¥u trÃºc cÆ¡ báº£n cá»§a má»™t trang HTML.',a:'<!DOCTYPE html>\n<html>\n  <head>\n    <title>TiÃªu Ä‘á» tab</title>\n  </head>\n  <body>\n    Ná»™i dung hiá»ƒn thá»‹ á»Ÿ Ä‘Ã¢y\n  </body>\n</html>\n\nâ€¢ <head>: chá»©a thÃ´ng tin meta, title, CSS\nâ€¢ <body>: chá»©a ná»™i dung hiá»ƒn thá»‹',lv:'B'},
+  {cat:3,q:'CÃ¡c tháº» HTML táº¡o tiÃªu Ä‘á» vÃ  Ä‘oáº¡n vÄƒn lÃ  gÃ¬?',a:'TiÃªu Ä‘á»: <h1> Ä‘áº¿n <h6>\nâ€¢ <h1>: to nháº¥t, quan trá»ng nháº¥t\nâ€¢ <h6>: nhá» nháº¥t\n\nÄoáº¡n vÄƒn: <p>Ná»™i dung</p>\nXuá»‘ng dÃ²ng: <br> (khÃ´ng cÃ³ tháº» Ä‘Ã³ng)\nIn Ä‘áº­m: <b> hoáº·c <strong>\nIn nghiÃªng: <i> hoáº·c <em>',lv:'B'},
+  {cat:3,q:'Viáº¿t cÃº phÃ¡p táº¡o liÃªn káº¿t vÃ  chÃ¨n hÃ¬nh áº£nh trong HTML.',a:'LiÃªn káº¿t:\n<a href="https://example.com">Nháº¥n vÃ o Ä‘Ã¢y</a>\nâ€¢ href: Ä‘á»‹a chá»‰ URL Ä‘Ã­ch\nâ€¢ target="_blank": má»Ÿ tab má»›i\n\nHÃ¬nh áº£nh:\n<img src="anh.jpg" alt="MÃ´ táº£ áº£nh" width="200">',lv:'B'},
+  {cat:3,q:'Táº¡o báº£ng HTML cÃ³ 2 hÃ ng, 3 cá»™t vá»›i tiÃªu Ä‘á» cá»™t.',a:'<table border="1">\n  <tr>\n    <th>Há» tÃªn</th>\n    <th>Lá»›p</th>\n    <th>Äiá»ƒm</th>\n  </tr>\n  <tr>\n    <td>Nguyá»…n A</td>\n    <td>12A1</td>\n    <td>9.0</td>\n  </tr>\n</table>\nâ€¢ <th>: Ã´ tiÃªu Ä‘á» (in Ä‘áº­m, cÄƒn giá»¯a)\nâ€¢ <td>: Ã´ dá»¯ liá»‡u thÃ´ng thÆ°á»ng',lv:'H'},
+  {cat:3,q:'CSS lÃ  gÃ¬? NÃªu 3 cÃ¡ch Ã¡p dá»¥ng CSS cho trang web.',a:'CSS (Cascading Style Sheets): ngÃ´n ngá»¯ Ä‘á»‹nh dáº¡ng trang web\n\n3 cÃ¡ch Ã¡p dá»¥ng:\n1. Ná»™i tuyáº¿n (inline): <p style="color:red">\n2. NhÃºng (internal): trong tháº» <style> á»Ÿ <head>\n3. NgoÃ i (external): file .css riÃªng, liÃªn káº¿t báº±ng <link>\n\nÆ¯u tiÃªn: inline > internal > external',lv:'H'},
+  {cat:3,q:'Giáº£i thÃ­ch cÃ¡c CSS selector: tag, class, id. Cho vÃ­ dá»¥.',a:'Tag selector: Ã¡p dá»¥ng cho táº¥t cáº£ tháº» cÃ¹ng loáº¡i\n  p { color: blue; }\n\nClass selector (.) : Ã¡p dá»¥ng cho class Ä‘Ã³\n  .noi-bat { font-weight: bold; }\n  DÃ¹ng: <p class="noi-bat">\n\nID selector (#): duy nháº¥t má»™t pháº§n tá»­\n  #tieu-de { font-size: 24px; }\n  DÃ¹ng: <h1 id="tieu-de">',lv:'H'},
+  {cat:3,q:'Thuá»™c tÃ­nh CSS nÃ o Ä‘iá»u chá»‰nh khoáº£ng cÃ¡ch trong vÃ  ngoÃ i pháº§n tá»­?',a:'margin: khoáº£ng cÃ¡ch BÃŠN NGOÃ€I viá»n pháº§n tá»­\n  margin: 10px; (4 phÃ­a)\n  margin-top, margin-bottom, margin-left, margin-right\n\npadding: khoáº£ng cÃ¡ch BÃŠN TRONG viá»n (giá»¯a viá»n vÃ  ná»™i dung)\n  padding: 15px;\n\nborder: viá»n cá»§a pháº§n tá»­\n  border: 1px solid black;',lv:'V'},
+  // 10F Láº­p trÃ¬nh cÆ¡ báº£n
+  {cat:4,q:'NÃªu cÃ¡c kiá»ƒu dá»¯ liá»‡u cÆ¡ báº£n trong Python.',a:'Sá»‘ nguyÃªn (int): 1, -5, 100\nSá»‘ thá»±c (float): 3.14, -2.5\nChuá»—i (str): "Xin chÃ o", \'Python\'\nLogic (bool): True, False\nDanh sÃ¡ch (list): [1, 2, 3]\nTuple: (1, 2, 3) â€“ báº¥t biáº¿n',lv:'B'},
+  {cat:4,q:'CÃº phÃ¡p lá»‡nh if-elif-else trong Python?',a:'if Ä‘iá»u_kiá»‡n_1:\n    # lá»‡nh náº¿u Ä‘k1 Ä‘Ãºng\nelif Ä‘iá»u_kiá»‡n_2:\n    # lá»‡nh náº¿u Ä‘k2 Ä‘Ãºng\nelse:\n    # lá»‡nh náº¿u táº¥t cáº£ sai\n\nVÃ­ dá»¥:\nif diem >= 8:\n    print("Giá»i")\nelif diem >= 6.5:\n    print("KhÃ¡")\nelse:\n    print("TB")',lv:'B'},
+  {cat:4,q:'VÃ²ng láº·p for vá»›i range() trong Python hoáº¡t Ä‘á»™ng tháº¿ nÃ o?',a:'for i in range(n): láº·p i tá»« 0 Ä‘áº¿n n-1\nfor i in range(a, b): láº·p tá»« a Ä‘áº¿n b-1\nfor i in range(a, b, buoc): láº·p vá»›i bÆ°á»›c nháº£y\n\nVÃ­ dá»¥:\nfor i in range(5):  # i = 0,1,2,3,4\n    print(i)\n\nTá»•ng 1â†’100:\ns = 0\nfor i in range(1, 101):\n    s += i',lv:'H'},
+  {cat:4,q:'VÃ²ng láº·p while trong Python â€“ cÃº phÃ¡p vÃ  vÃ­ dá»¥.',a:'while Ä‘iá»u_kiá»‡n:\n    # lá»‡nh láº·p\n    # cáº§n thay Ä‘á»•i Ä‘iá»u kiá»‡n Ä‘á»ƒ trÃ¡nh vÃ²ng vÃ´ háº¡n\n\nVÃ­ dá»¥ â€“ Ä‘áº¿m ngÆ°á»£c:\ni = 5\nwhile i > 0:\n    print(i)\n    i -= 1\nprint("Háº¿t!")\n\nLÆ°u Ã½: while khÃ´ng biáº¿t trÆ°á»›c sá»‘ láº§n láº·p,\nfor dÃ¹ng khi biáº¿t trÆ°á»›c sá»‘ láº§n láº·p.',lv:'H'},
+  {cat:4,q:'Äá»‹nh nghÄ©a vÃ  gá»i hÃ m trong Python nhÆ° tháº¿ nÃ o?',a:'Äá»‹nh nghÄ©a:\ndef ten_ham(tham_so1, tham_so2):\n    # thÃ¢n hÃ m\n    return ket_qua\n\nGá»i hÃ m:\nket_qua = ten_ham(gia_tri1, gia_tri2)\n\nVÃ­ dá»¥:\ndef tinh_tbcong(a, b, c):\n    return (a + b + c) / 3\n\nTB = tinh_tbcong(7, 8, 9)\nprint(TB)  # in ra 8.0',lv:'H'},
+  {cat:4,q:'Äá»c Ä‘oáº¡n code Python sau vÃ  cho biáº¿t káº¿t quáº£:\ndef tinh(n):\n    s=0\n    for i in range(1,n+1):\n        if i%2==0:\n            s+=i\n    return s\nprint(tinh(6))',a:'PhÃ¢n tÃ­ch:\nâ€¢ HÃ m tinh(n) tÃ­nh tá»•ng cÃ¡c sá»‘ CHáº´N tá»« 1 Ä‘áº¿n n\nâ€¢ i%2==0: kiá»ƒm tra i chia háº¿t cho 2 (sá»‘ cháºµn)\nâ€¢ n=6: cÃ¡c sá»‘ cháºµn lÃ  2, 4, 6\nâ€¢ s = 2 + 4 + 6 = 12\n\nKáº¿t quáº£ in ra: 12',lv:'V'},
+  // 12D Äáº¡o Ä‘á»©c mÃ´i trÆ°á»ng sá»‘
+  {cat:5,q:'NÃªu nhá»¯ng nguyÃªn táº¯c á»©ng xá»­ vÄƒn minh trong khÃ´ng gian máº¡ng.',a:'NguyÃªn táº¯c giao tiáº¿p sá»‘ vÄƒn minh:\nâ€¢ KhÃ´ng Ä‘Äƒng thÃ´ng tin sai sá»± tháº­t, tin giáº£\nâ€¢ TÃ´n trá»ng ngÆ°á»i khÃ¡c, khÃ´ng miá»‡t thá»‹\nâ€¢ Báº£o vá»‡ thÃ´ng tin cÃ¡ nhÃ¢n (cá»§a mÃ¬nh vÃ  ngÆ°á»i khÃ¡c)\nâ€¢ KhÃ´ng báº¯t náº¡t trá»±c tuyáº¿n (cyberbullying)\nâ€¢ Chia sáº» ná»™i dung cÃ³ báº£n quyá»n pháº£i xin phÃ©p\nâ€¢ Chá»‹u trÃ¡ch nhiá»‡m vá»›i ná»™i dung mÃ¬nh Ä‘Äƒng',lv:'B'},
+  {cat:5,q:'Luáº­t An ninh máº¡ng Viá»‡t Nam nghiÃªm cáº¥m nhá»¯ng hÃ nh vi nÃ o?',a:'Luáº­t An ninh máº¡ng 2018 nghiÃªm cáº¥m:\nâ€¢ ÄÄƒng táº£i thÃ´ng tin chá»‘ng phÃ¡ NhÃ  nÆ°á»›c\nâ€¢ TÃ¡n phÃ¡t tin giáº£, gÃ¢y hoang mang dÆ° luáº­n\nâ€¢ XÃºc pháº¡m danh dá»±, nhÃ¢n pháº©m ngÆ°á»i khÃ¡c\nâ€¢ Táº¥n cÃ´ng, xÃ¢m pháº¡m há»‡ thá»‘ng thÃ´ng tin\nâ€¢ Lá»«a Ä‘áº£o, chiáº¿m Ä‘oáº¡t tÃ i sáº£n qua máº¡ng\nâ€¢ PhÃ¡t tÃ¡n virus, mÃ£ Ä‘á»™c',lv:'B'},
+  {cat:5,q:'Báº£n quyá»n pháº§n má»m lÃ  gÃ¬? PhÃ¢n biá»‡t pháº§n má»m báº£n quyá»n, freeware vÃ  mÃ£ nguá»“n má»Ÿ.',a:'Pháº§n má»m báº£n quyá»n: pháº£i mua báº£n quyá»n má»›i Ä‘Æ°á»£c dÃ¹ng há»£p phÃ¡p (VD: Windows, Office)\n\nFreeware (miá»…n phÃ­): dÃ¹ng miá»…n phÃ­ nhÆ°ng khÃ´ng Ä‘Æ°á»£c sá»­a mÃ£ nguá»“n (VD: VLC, 7-Zip)\n\nMÃ£ nguá»“n má»Ÿ (Open Source): Ä‘Æ°á»£c dÃ¹ng, sá»­a, chia sáº» tá»± do (VD: Linux, LibreOffice)\n\nVi pháº¡m báº£n quyá»n: dÃ¹ng pháº§n má»m mÃ  khÃ´ng cÃ³ giáº¥y phÃ©p há»£p lá»‡',lv:'H'},
+  {cat:5,q:'Deepfake lÃ  gÃ¬? Nguy hiá»ƒm nhÆ° tháº¿ nÃ o?',a:'Deepfake: cÃ´ng nghá»‡ AI táº¡o ra video/hÃ¬nh áº£nh/giá»ng nÃ³i giáº£ máº¡o ngÆ°á»i tháº­t ráº¥t chÃ¢n thá»±c\n\nNguy háº¡i:\nâ€¢ Táº¡o thÃ´ng tin giáº£, bÃ´i nhá» danh dá»±\nâ€¢ Lá»«a Ä‘áº£o qua video giáº£ máº¡o lÃ£nh Ä‘áº¡o\nâ€¢ PhÃ¡t tÃ¡n ná»™i dung nháº¡y cáº£m giáº£\nâ€¢ GÃ¢y hoang mang, máº¥t niá»m tin xÃ£ há»™i\n\nNháº­n biáº¿t: kiá»ƒm tra tá»« nhiá»u nguá»“n uy tÃ­n',lv:'V'},
+  // 12G HÆ°á»›ng nghiá»‡p
+  {cat:6,q:'Ká»ƒ cÃ¡c nhÃ³m nghá» thuá»™c lÄ©nh vá»±c CNTT â€“ Tin há»c.',a:'NhÃ³m nghá» CNTT:\n1. PhÃ¡t triá»ƒn pháº§n má»m (Developer/Engineer)\n2. Quáº£n trá»‹ há»‡ thá»‘ng & máº¡ng (SysAdmin, NetAdmin)\n3. An ninh máº¡ng (Cybersecurity)\n4. Khoa há»c dá»¯ liá»‡u / AI (Data Scientist)\n5. Thiáº¿t káº¿ UI/UX\n6. Quáº£n trá»‹ CSDL (DBA)\n7. Há»— trá»£ ká»¹ thuáº­t (IT Support/Helpdesk)\n8. Cloud Computing / DevOps',lv:'B'},
+  {cat:6,q:'NhÃ³m nghá» "Dá»‹ch vá»¥ vÃ  quáº£n trá»‹" trong Tin há»c bao gá»“m nhá»¯ng cÃ´ng viá»‡c nÃ o?',a:'NhÃ³m nghá» dá»‹ch vá»¥ vÃ  quáº£n trá»‹ CNTT:\nâ€¢ Quáº£n trá»‹ há»‡ thá»‘ng: cÃ i Ä‘áº·t, báº£o trÃ¬ server\nâ€¢ Quáº£n trá»‹ máº¡ng: duy trÃ¬ há»‡ thá»‘ng máº¡ng\nâ€¢ Há»— trá»£ ká»¹ thuáº­t (IT Helpdesk)\nâ€¢ Quáº£n trá»‹ CSDL (DBA â€“ Database Administrator)\nâ€¢ Quáº£n lÃ½ dá»± Ã¡n CNTT (IT Project Manager)\nâ€¢ Digital Marketing, SEO\nâ€¢ Cloud Administrator (AWS, Azure)',lv:'H'},
+  // 11F CSDL
+  {cat:7,q:'CSDL (CÆ¡ sá»Ÿ dá»¯ liá»‡u) lÃ  gÃ¬? Ká»ƒ cÃ¡c thÃ nh pháº§n cÆ¡ báº£n.',a:'CSDL (Database): táº­p há»£p dá»¯ liá»‡u cÃ³ cáº¥u trÃºc, Ä‘Æ°á»£c tá»• chá»©c Ä‘á»ƒ dá»… lÆ°u trá»¯, truy xuáº¥t vÃ  quáº£n lÃ½\n\nCÃ¡c thÃ nh pháº§n:\nâ€¢ Báº£ng (Table): táº­p há»£p dá»¯ liá»‡u cÃ¹ng loáº¡i\nâ€¢ Báº£n ghi (Record/Row): má»™t hÃ ng dá»¯ liá»‡u\nâ€¢ TrÆ°á»ng (Field/Column): má»™t cá»™t dá»¯ liá»‡u\nâ€¢ KhÃ³a chÃ­nh (Primary Key): Ä‘á»‹nh danh duy nháº¥t má»—i báº£n ghi\n\nHá»‡ QTCSDL: MySQL, Microsoft Access, SQL Server',lv:'B'},
+  {cat:7,q:'Viáº¿t cÃ¢u lá»‡nh SQL láº¥y toÃ n bá»™ dá»¯ liá»‡u tá»« báº£ng HocSinh.',a:'SELECT * FROM HocSinh;\n\nTrong Ä‘Ã³:\nâ€¢ SELECT: chá»n cá»™t cáº§n láº¥y (* = táº¥t cáº£)\nâ€¢ FROM: chá»‰ Ä‘á»‹nh báº£ng nguá»“n\nâ€¢ Dáº¥u ; káº¿t thÃºc cÃ¢u lá»‡nh\n\nLáº¥y má»™t sá»‘ cá»™t:\nSELECT HoTen, DiemTB FROM HocSinh;',lv:'B'},
+  {cat:7,q:'CÃ¢u lá»‡nh SQL nÃ o dÃ¹ng Ä‘á»ƒ lá»c dá»¯ liá»‡u cÃ³ Ä‘iá»u kiá»‡n? Cho vÃ­ dá»¥.',a:'DÃ¹ng má»‡nh Ä‘á» WHERE:\nSELECT * FROM HocSinh WHERE DiemTB >= 8.0;\n\nCÃ¡c toÃ¡n tá»­ trong WHERE:\nâ€¢ So sÃ¡nh: =, >, <, >=, <=, <>\nâ€¢ Káº¿t há»£p: AND, OR, NOT\nâ€¢ TÆ°Æ¡ng tá»±: LIKE (VD: WHERE HoTen LIKE "Nguyá»…n%")\nâ€¢ Trong danh sÃ¡ch: IN\n\nSáº¯p xáº¿p:\nSELECT * FROM HocSinh ORDER BY DiemTB DESC;',lv:'H'},
+  {cat:7,q:'CÃ¡c hÃ m tá»•ng há»£p trong SQL lÃ  gÃ¬? NÃªu cÃº phÃ¡p vÃ  vÃ­ dá»¥.',a:'HÃ m tá»•ng há»£p (Aggregate Functions):\nâ€¢ COUNT(*): Ä‘áº¿m sá»‘ báº£n ghi\nâ€¢ SUM(cá»™t): tÃ­nh tá»•ng\nâ€¢ AVG(cá»™t): tÃ­nh trung bÃ¬nh\nâ€¢ MAX(cá»™t): giÃ¡ trá»‹ lá»›n nháº¥t\nâ€¢ MIN(cá»™t): giÃ¡ trá»‹ nhá» nháº¥t\n\nVÃ­ dá»¥:\nSELECT COUNT(*) FROM HocSinh;\nSELECT AVG(DiemTB) FROM HocSinh WHERE Lop="12A1";',lv:'V'},
+];
+
+let fil=[...CARDS], cur=0, flipped=false;
+
+function sf(f, btn){
+  document.querySelectorAll('.fb').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  fil = f===0?[...CARDS]:CARDS.filter(c=>c.cat===f);
+  cur=0; flipped=false; upd();
+}
+
+const CATNAME={1:'ðŸ¤– 12A Â· TrÃ­ tuá»‡ nhÃ¢n táº¡o',2:'ðŸŒ 12B Â· Máº¡ng mÃ¡y tÃ­nh',3:'ðŸŒ 12F Â· Táº¡o trang Web',4:'ðŸ’» 10F Â· Láº­p trÃ¬nh Python',5:'âš–ï¸ 12D Â· Äáº¡o Ä‘á»©c sá»‘',6:'ðŸŽ¯ 12G Â· HÆ°á»›ng nghiá»‡p',7:'ðŸ—„ï¸ 11F Â· CÆ¡ sá»Ÿ dá»¯ liá»‡u'};
+const CATCOL={1:'#ff6b35',2:'#38bdf8',3:'#a78bfa',4:'#34d399',5:'#fcd34d',6:'#f472b6',7:'#67e8f9'};
+const LVNAME={B:'Nháº­n biáº¿t',H:'ThÃ´ng hiá»ƒu',V:'Váº­n dá»¥ng'};
+const LVCOL={B:'rgba(16,185,129,0.2)',H:'rgba(245,158,11,0.2)',V:'rgba(239,68,68,0.2)'};
+const LVTXT={B:'#10b981',H:'#fcd34d',V:'#f87171'};
+
+function upd(){
+  const c=fil[cur];
+  document.getElementById('fq').textContent=c.q;
+  document.getElementById('fa').textContent=c.a;
+  const ce=document.getElementById('fcat');
+  ce.textContent=CATNAME[c.cat]||'';
+  ce.style.background=(CATCOL[c.cat]||'#fff')+'22';
+  ce.style.color=CATCOL[c.cat]||'#fff';
+  const le=document.getElementById('flv');
+  le.textContent='Má»©c: '+LVNAME[c.lv];
+  le.style.background=LVCOL[c.lv];
+  le.style.color=LVTXT[c.lv];
+  document.getElementById('cur').textContent=cur+1;
+  document.getElementById('tot').textContent=fil.length;
+  document.getElementById('pf').style.width=((cur+1)/fil.length*100)+'%';
+  document.getElementById('c3d').classList.remove('flipped');
+  document.getElementById('aib').className='aibox';
+  flipped=false;
+}
+
+function flip(){ flipped=!flipped; document.getElementById('c3d').classList.toggle('flipped',flipped); }
+function nxt(){ cur=(cur+1)%fil.length; upd(); }
+function prev(){ cur=(cur-1+fil.length)%fil.length; upd(); }
+
+async function askAI(){
+  const c=fil[cur];
+  const box=document.getElementById('aib');
+  box.className='aibox show';
+  box.innerHTML='<span class="think">âœ¨ AI Ä‘ang phÃ¢n tÃ­ch cÃ¢u há»i...</span>';
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system:`Báº¡n lÃ  giÃ¡o viÃªn Tin há»c dáº¡y lá»›p 12 chÆ°Æ¡ng trÃ¬nh GDPT 2018 Ä‘á»‹nh hÆ°á»›ng ICT táº¡i trÆ°á»ng THPT Phong ChÃ¢u, PhÃº Thá».
+H£y giáº£i thÃ­ch thÃªm cÃ¢u há»i flashcard cho há»c sinh Ã´n thi tá»‘t nghiá»‡p THPT 2026, cá»¥m 308.
+Phong cÃ¡ch: ngáº¯n gá»n, dá»… nhá»›, cÃ³ vÃ­ dá»¥ thá»±c táº¿, dÃ¹ng emoji phÃ¹ há»£p.
+CÃ³ thá»ƒ thÃªm máº¹o ghi nhá»› (trick), liÃªn há»‡ Ä‘á» thi thá»±c táº¿ náº¿u cÃ³.
+Tá»‘i Ä‘a 180 tá»«. Tráº£ lá»i báº±ng tiáº¿ng Viá»‡t.`,
+        messages:[{role:'user',content:`Chá»§ Ä‘á»: ${CATNAME[c.cat]}\nMá»©c Ä‘á»™: ${LVNAME[c.lv]}\nCÃ¢u há»i: ${c.q}\nÄÃ¡p Ã¡n cÆ¡ báº£n: ${c.a}\n\nHÃ£y má»Ÿ rá»™ng giáº£i thÃ­ch, cho máº¹o nhá»› vÃ  liÃªn há»‡ thá»±c táº¿ Ä‘á» thi.`}]
+      })
+    });
+    const d=await res.json();
+    const t=d.content?.map(i=>i.text||'').join('')||'KhÃ´ng cÃ³ pháº£n há»“i.';
+    box.innerHTML='<strong style="color:#a78bfa;display:block;margin-bottom:8px">âœ¨ Giáº£i thÃ­ch tá»« AI (Claude):</strong>'+t.replace(/\n/g,'<br>');
+  }catch(e){
+    box.innerHTML='âš ï¸ KhÃ´ng thá»ƒ káº¿t ná»‘i AI. Vui lÃ²ng kiá»ƒm tra káº¿t ná»‘i máº¡ng.';
+  }
+}
+
+upd();
+</script>
+</body>
+</html>
